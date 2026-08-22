@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "32588166649",
-  "generated_at": "2026-08-22T17:35:13.627Z",
-  "collector_completed_at": "2026-08-22T17:35:32.419Z",
+  "run_id": "32589327538",
+  "generated_at": "2026-08-22T17:58:24.264Z",
+  "collector_completed_at": "2026-08-22T17:58:42.552Z",
   "health": "degraded",
-  "notifications": []
+  "notifications": [
+    {
+      "event_id": "euler-monitor_degraded-5b78d42d861bf252fecf3f4a",
+      "type": "monitor_degraded",
+      "chain_id": null,
+      "vault": null,
+      "created_at": "2026-08-22T17:58:24.264Z",
+      "message": "MONITOR DEGRADED\nAffected chains: Unichain\nAffected markets: 0xd325a54926c937710daa1b46d1c6587155084a63\nFailed source: collector\nReason: unsupported/non-vault contract; code_exists=false code_size=0"
+    }
+  ]
 }
