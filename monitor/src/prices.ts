@@ -1,7 +1,17 @@
-import { DEFI_LLAMA_CHAIN } from "./config.js";
-import type { Address, PriceSource } from "./types.js";
+import { formatUnits, type PublicClient } from "viem";
+import { ERC20Abi, UtilsLensAbi } from "./abis.js";
+import type { Address, PriceSource, VaultType } from "./types.js";
 
 export interface PriceResult { price: number; source: PriceSource }
+
+const USD_ADDRESS = "0x0000000000000000000000000000000000000348" as Address;
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+interface AssetPriceInfo {
+  queryFailure: boolean;
+  unitOfAccount: Address;
+  amountOutMid: bigint;
+}
 
 export function parseEulerPriceResponse(json: unknown, assets: string[]): Map<string, PriceResult> {
   const result = new Map<string, PriceResult>();
@@ -71,27 +81,75 @@ export async function fetchEulerPrices(baseUrl: string, chainId: number, assets:
   }
 }
 
-export async function fillDefiLlamaPrices(chainId: number, assets: Address[], existing: Map<string, PriceResult>): Promise<Map<string, PriceResult>> {
-  const slug = DEFI_LLAMA_CHAIN[chainId];
-  if (!slug) return existing;
-  const missing = [...new Set(assets.map((asset) => asset.toLowerCase()))].filter((asset) => !existing.has(asset));
-  for (let index = 0; index < missing.length; index += 40) {
-    const chunk = missing.slice(index, index + 40);
-    const ids = chunk.map((address) => `${slug}:${address}`).join(",");
-    try {
-      const json = await fetchJson(`https://coins.llama.fi/prices/current/${encodeURIComponent(ids)}`) as { coins?: Record<string, unknown> };
-      for (const address of chunk) {
-        const price = positiveNumber(json.coins?.[`${slug}:${address}`]);
-        if (price) existing.set(address, { price, source: "defillama" });
-      }
-      console.log(`[price fallback] chain=${chainId} source=defillama requested=${chunk.length}`);
-    } catch {
-      console.warn(`[price fallback] chain=${chainId} source=defillama unavailable`);
-    }
-  }
-  return existing;
+function lensPrice(value: unknown): AssetPriceInfo | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const info = value as Partial<AssetPriceInfo>;
+  return typeof info.queryFailure === "boolean" && typeof info.unitOfAccount === "string" && typeof info.amountOutMid === "bigint"
+    ? info as AssetPriceInfo
+    : undefined;
 }
 
 export async function getPrices(baseUrl: string, chainId: number, assets: Address[]): Promise<Map<string, PriceResult>> {
-  return fillDefiLlamaPrices(chainId, assets, await fetchEulerPrices(baseUrl, chainId, assets));
+  return fetchEulerPrices(baseUrl, chainId, assets);
+}
+
+async function getDirectLensPrice(client: PublicClient, utilsLens: Address, asset: Address): Promise<PriceResult | undefined> {
+  const info = lensPrice(await client.readContract({
+    address: utilsLens,
+    abi: UtilsLensAbi,
+    functionName: "getAssetPriceInfo",
+    args: [asset, USD_ADDRESS],
+  }));
+  if (!info || info.queryFailure || info.amountOutMid <= 0n) return undefined;
+  const price = Number(formatUnits(info.amountOutMid, 18));
+  return Number.isFinite(price) && price > 0 ? { price, source: "euler-onchain" } : undefined;
+}
+
+async function getUnitOfAccountUsdRate(client: PublicClient, baseUrl: string, chainId: number, utilsLens: Address, unitOfAccount: Address): Promise<number | undefined> {
+  if (unitOfAccount.toLowerCase() === USD_ADDRESS.toLowerCase()) return 1;
+  if (unitOfAccount.toLowerCase() === ZERO_ADDRESS) return undefined;
+
+  const v3 = await fetchEulerPrices(baseUrl, chainId, [unitOfAccount]);
+  const direct = v3.get(unitOfAccount.toLowerCase());
+  if (direct) return direct.price;
+
+  const info = lensPrice(await client.readContract({
+    address: utilsLens,
+    abi: UtilsLensAbi,
+    functionName: "getAssetPriceInfo",
+    args: [unitOfAccount, USD_ADDRESS],
+  }));
+  if (!info || info.queryFailure || info.amountOutMid <= 0n) return undefined;
+  const rate = Number(formatUnits(info.amountOutMid, 18));
+  return Number.isFinite(rate) && rate > 0 ? rate : undefined;
+}
+
+export async function getOnchainVaultPrice(
+  client: PublicClient,
+  baseUrl: string,
+  chainId: number,
+  utilsLens: Address,
+  vault: Address,
+  vaultType: VaultType,
+  asset: Address,
+): Promise<PriceResult | undefined> {
+  // The official SDK routes EulerEarn and other ERC-4626 vaults directly
+  // through UtilsLens. EVaults first quote the liability asset in the
+  // vault's unit of account, then convert that unit of account to USD.
+  if (vaultType !== "evault") return getDirectLensPrice(client, utilsLens, asset);
+
+  const info = lensPrice(await client.readContract({
+    address: utilsLens,
+    abi: UtilsLensAbi,
+    functionName: "getControllerAssetPriceInfo",
+    args: [vault, asset],
+  }));
+  if (!info || info.queryFailure || info.amountOutMid <= 0n) return undefined;
+  const uoaDecimals = info.unitOfAccount.toLowerCase() === USD_ADDRESS.toLowerCase()
+    ? 18
+    : Number(await client.readContract({ address: info.unitOfAccount, abi: ERC20Abi, functionName: "decimals" }));
+  const uoaPrice = Number(formatUnits(info.amountOutMid, uoaDecimals));
+  const uoaUsdRate = await getUnitOfAccountUsdRate(client, baseUrl, chainId, utilsLens, info.unitOfAccount);
+  const price = uoaUsdRate === undefined ? undefined : uoaPrice * uoaUsdRate;
+  return price !== undefined && Number.isFinite(price) && price > 0 ? { price, source: "euler-onchain" } : undefined;
 }

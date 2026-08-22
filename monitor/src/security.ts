@@ -18,12 +18,21 @@ const FORBIDDEN_PATTERNS: Array<[RegExp, string]> = [
 ];
 
 export function safeErrorReason(error: unknown, fallback: string): string {
-  if (error instanceof Error) {
-    if (error.name === "AbortError") return `${fallback}: timeout`;
-    if (/unsupported IRM|no live kink|kink scale/i.test(error.message)) return `${fallback}: unsupported live IRM target`;
-    if (/no RPC endpoints/i.test(error.message)) return `${fallback}: no RPC endpoints configured`;
-    if (/HTTP \d+/.test(error.message)) return `${fallback}: ${error.message.match(/HTTP \d+/)?.[0]}`;
-    return `${fallback}: ${safeClassName(error.name)}`;
+  const chain: unknown[] = [];
+  let current: unknown = error;
+  for (let depth = 0; depth < 5 && current && typeof current === "object"; depth++) {
+    chain.push(current);
+    current = (current as { original?: unknown; cause?: unknown }).original ?? (current as { cause?: unknown }).cause;
+  }
+  const errors = chain.filter((value): value is Error => value instanceof Error);
+  if (errors.some((value) => value.name === "AbortError")) return `${fallback}: timeout`;
+  const messages = errors.map((value) => value.message).join(" ");
+  if (/unsupported IRM|no live kink|kink scale|target scale/i.test(messages)) return `${fallback}: unsupported live IRM target`;
+  if (/no RPC endpoints/i.test(messages)) return `${fallback}: no RPC endpoints configured`;
+  if (/HTTP \d+/.test(messages)) return `${fallback}: ${messages.match(/HTTP \d+/)?.[0]}`;
+  if (errors.length) {
+    const underlying = errors.at(-1)!;
+    return `${fallback}: ${safeClassName(underlying.name)}`;
   }
   return fallback;
 }

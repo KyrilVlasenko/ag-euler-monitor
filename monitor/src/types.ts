@@ -16,7 +16,8 @@ export interface InventoryVault {
   rawRow: string;
 }
 
-export type PriceSource = "euler-v3" | "defillama";
+export type PriceSource = "euler-v3" | "euler-onchain";
+export type VaultType = "evault" | "euler-earn" | "erc4626" | "non-vault";
 export type IrmKind = "linear-kink" | "linear-kinky" | "adaptive-target" | "unknown-kink";
 
 export interface MarketSnapshot {
@@ -142,9 +143,26 @@ export interface ChainCoverage {
   chain_name: string;
   inventory_candidates: number;
   lifecycle_excluded: number;
+  risk_not_applicable: number;
+  eligibility_unresolved: number;
+  deposit_ineligible: number;
   deposit_eligible: number;
   fully_monitored: number;
+  monitoring_unresolved: number;
   unresolved: number;
+}
+
+export interface RiskNotApplicableMarket {
+  chain_id: number;
+  chain_name: string;
+  vault_address: Address;
+  vault_type: VaultType;
+  block_number: string;
+  reason: string;
+  interest_rate_model: Address;
+  total_borrows_raw: string;
+  collateral_count: number;
+  borrow_cap: string;
 }
 
 export interface LatestFeed {
@@ -165,10 +183,16 @@ export interface LatestFeed {
     total: number;
     lifecycle_excluded: number;
     candidates: number;
+    risk_not_applicable: number;
+    eligibility_unresolved: number;
+    deposit_ineligible: number;
     deposit_eligible: number;
     fully_monitored: number;
+    monitoring_unresolved: number;
+    unresolved: number;
   };
   coverage: ChainCoverage[];
+  risk_not_applicable_markets: RiskNotApplicableMarket[];
   issues: CoverageIssue[];
   markets: MarketSnapshot[];
 }

@@ -8,6 +8,10 @@ export const EVaultAbi = parseAbi([
   "function cash() view returns (uint256)",
   "function interestRate() view returns (uint256)",
   "function interestRateModel() view returns (address)",
+  "function oracle() view returns (address)",
+  "function unitOfAccount() view returns (address)",
+  "function caps() view returns (uint16 supplyCap, uint16 borrowCap)",
+  "function LTVList() view returns (address[])",
   "event Borrow(address indexed account, uint256 assets)",
   "event Repay(address indexed account, uint256 assets)",
   "event InterestAccrued(address indexed account, uint256 assets)",
@@ -45,4 +49,21 @@ export const AdaptiveIrmAbi = parseAbi([
   "function MAX_RATE_AT_TARGET() view returns (int256)",
   "function CURVE_STEEPNESS() view returns (int256)",
   "function ADJUSTMENT_SPEED() view returns (int256)",
+]);
+
+export const GenericFactoryAbi = parseAbi([
+  "function isProxy(address proxy) view returns (bool)",
+]);
+
+export const EulerEarnFactoryAbi = parseAbi([
+  "function isVault(address vault) view returns (bool)",
+]);
+
+export const IrmLensAbi = parseAbi([
+  "function getInterestRateModelInfo(address irm) view returns ((address interestRateModel, uint8 interestRateModelType, bytes interestRateModelParams))",
+]);
+
+export const UtilsLensAbi = parseAbi([
+  "function getAssetPriceInfo(address asset, address unitOfAccount) view returns ((bool queryFailure, bytes queryFailureReason, uint256 timestamp, address oracle, address asset, address unitOfAccount, uint256 amountIn, uint256 amountOutMid, uint256 amountOutBid, uint256 amountOutAsk))",
+  "function getControllerAssetPriceInfo(address controller, address asset) view returns ((bool queryFailure, bytes queryFailureReason, uint256 timestamp, address oracle, address asset, address unitOfAccount, uint256 amountIn, uint256 amountOutMid, uint256 amountOutBid, uint256 amountOutAsk))",
 ]);

@@ -28,7 +28,7 @@ function snapshot(overrides: Partial<MarketSnapshot> = {}): MarketSnapshot {
     observed_at: NOW,
     block_number: "100",
     price_usd: 1,
-    price_source: "defillama",
+    price_source: "euler-v3",
     total_assets_raw: "10000000000000",
     deposits_usd: 10_000_000,
     cash_raw: "700000000000",

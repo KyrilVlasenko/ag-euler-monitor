@@ -1,11 +1,12 @@
+import assert from "node:assert/strict";
 import { criticalThreshold, evaluateMarket, isDepositEligible, needsEventInvestigation, type EngineOptions } from "./engine.js";
 import { buildNotificationFeed, formatHealth, formatRecovery, formatRiskAlert, makeNotification } from "./format.js";
 import { loadInventory } from "./inventory.js";
-import { getPrices } from "./prices.js";
-import { readEvents, readRisk, readStage1, RpcPool, toTokenNumber, utilizationPct, borrowApyPct } from "./rpc.js";
+import { getOnchainVaultPrice, getPrices } from "./prices.js";
+import { borrowApyPct, describeRpcFailure, detectVault, readEvents, readRisk, readStage1, RpcPool, toTokenNumber, utilizationPct, type Stage1Read, type VaultDetection } from "./rpc.js";
 import { safeErrorReason } from "./security.js";
 import { loadState, writePublicJson, writePublicText } from "./state.js";
-import { executionMode, marketKey, type MonitorConfig } from "./config.js";
+import { EULER_DEPLOYMENTS, executionMode, marketKey, type MonitorConfig } from "./config.js";
 import type {
   Address,
   ChainCoverage,
@@ -17,15 +18,114 @@ import type {
   MonitorState,
   NotificationEvent,
   NotificationFeed,
+  RiskNotApplicableMarket,
 } from "./types.js";
 
-interface Stage1Result {
+interface Stage1Result extends Stage1Read {
   vault: InventoryVault;
   pool: RpcPool;
-  asset: Address;
-  decimals: number;
-  symbol: string;
-  totalAssets: bigint;
+  detection: VaultDetection;
+}
+
+type CandidateOutcome = "pending" | "risk-not-applicable" | "eligibility-unresolved" | "deposit-ineligible" | "monitoring-unresolved" | "fully-monitored";
+
+export class CoverageTracker {
+  private readonly outcomes = new Map<string, CandidateOutcome>();
+  private readonly candidates = new Map<string, InventoryVault>();
+
+  constructor(private readonly vaults: InventoryVault[]) {
+    for (const vault of vaults) {
+      if (vault.statusDecision === "exclude") continue;
+      const key = marketKey(vault.chainId, vault.address);
+      this.candidates.set(key, vault);
+      this.outcomes.set(key, "pending");
+    }
+  }
+
+  mark(vault: InventoryVault, outcome: Exclude<CandidateOutcome, "pending">): void {
+    const key = marketKey(vault.chainId, vault.address);
+    const current = this.outcomes.get(key);
+    if (current !== "pending") throw new Error(`coverage outcome already finalized for ${key}: ${current ?? "missing"}`);
+    this.outcomes.set(key, outcome);
+  }
+
+  pending(): InventoryVault[] {
+    return [...this.candidates.entries()].filter(([key]) => this.outcomes.get(key) === "pending").map(([, vault]) => vault);
+  }
+
+  rows(): ChainCoverage[] {
+    const result = new Map<number, ChainCoverage>();
+    for (const vault of this.vaults) {
+      const row = result.get(vault.chainId) ?? {
+        chain_id: vault.chainId,
+        chain_name: vault.chainName,
+        inventory_candidates: 0,
+        lifecycle_excluded: 0,
+        risk_not_applicable: 0,
+        eligibility_unresolved: 0,
+        deposit_ineligible: 0,
+        deposit_eligible: 0,
+        fully_monitored: 0,
+        monitoring_unresolved: 0,
+        unresolved: 0,
+      };
+      if (vault.statusDecision === "exclude") {
+        row.lifecycle_excluded++;
+      } else {
+        row.inventory_candidates++;
+        const outcome = this.outcomes.get(marketKey(vault.chainId, vault.address));
+        if (outcome === "risk-not-applicable") row.risk_not_applicable++;
+        else if (outcome === "eligibility-unresolved") row.eligibility_unresolved++;
+        else if (outcome === "deposit-ineligible") row.deposit_ineligible++;
+        else if (outcome === "monitoring-unresolved") {
+          row.deposit_eligible++;
+          row.monitoring_unresolved++;
+        } else if (outcome === "fully-monitored") {
+          row.deposit_eligible++;
+          row.fully_monitored++;
+        } else {
+          throw new Error(`coverage outcome is pending for ${marketKey(vault.chainId, vault.address)}`);
+        }
+      }
+      row.unresolved = row.eligibility_unresolved + row.monitoring_unresolved;
+      result.set(vault.chainId, row);
+    }
+    return [...result.values()].sort((a, b) => a.chain_id - b.chain_id);
+  }
+}
+
+export interface CoverageTotals {
+  risk_not_applicable: number;
+  eligibility_unresolved: number;
+  deposit_ineligible: number;
+  deposit_eligible: number;
+  fully_monitored: number;
+  monitoring_unresolved: number;
+  unresolved: number;
+}
+
+export function assertCoverageInvariants(rows: ChainCoverage[]): CoverageTotals {
+  for (const row of rows) {
+    assert.equal(row.inventory_candidates, row.risk_not_applicable + row.eligibility_unresolved + row.deposit_ineligible + row.deposit_eligible, `chain ${row.chain_id}: every candidate must have exactly one outcome`);
+    assert.equal(row.deposit_eligible, row.fully_monitored + row.monitoring_unresolved, `chain ${row.chain_id}: every eligible market must be monitored or unresolved`);
+    assert.equal(row.unresolved, row.eligibility_unresolved + row.monitoring_unresolved, `chain ${row.chain_id}: unresolved counters must reconcile`);
+  }
+  const sum = (field: keyof CoverageTotals): number => rows.reduce((total, row) => total + row[field], 0);
+  const totals: CoverageTotals = {
+    risk_not_applicable: sum("risk_not_applicable"),
+    eligibility_unresolved: sum("eligibility_unresolved"),
+    deposit_ineligible: sum("deposit_ineligible"),
+    deposit_eligible: sum("deposit_eligible"),
+    fully_monitored: sum("fully_monitored"),
+    monitoring_unresolved: sum("monitoring_unresolved"),
+    unresolved: sum("unresolved"),
+  };
+  const globalFullyMonitored = totals.fully_monitored;
+  const perChainFullyMonitored = rows.reduce((total, row) => total + row.fully_monitored, 0);
+  assert.equal(globalFullyMonitored, perChainFullyMonitored, "globalFullyMonitored === sum(perChainFullyMonitored)");
+  assert.equal(totals.deposit_eligible, totals.fully_monitored + totals.monitoring_unresolved, "global eligible counters must reconcile");
+  assert.equal(totals.unresolved, totals.eligibility_unresolved + totals.monitoring_unresolved, "global unresolved counters must reconcile");
+  return totals;
 }
 
 async function mapLimit<T, R>(items: T[], limit: number, worker: (item: T) => Promise<R>): Promise<R[]> {
@@ -135,23 +235,14 @@ function marketStateFromSnapshot(previous: MarketState | undefined, snapshot: Ma
   };
 }
 
-function makeCoverage(vaults: InventoryVault[]): Map<number, ChainCoverage> {
-  const result = new Map<number, ChainCoverage>();
-  for (const vault of vaults) {
-    const existing = result.get(vault.chainId) ?? {
-      chain_id: vault.chainId,
-      chain_name: vault.chainName,
-      inventory_candidates: 0,
-      lifecycle_excluded: 0,
-      deposit_eligible: 0,
-      fully_monitored: 0,
-      unresolved: 0,
-    };
-    if (vault.statusDecision === "exclude") existing.lifecycle_excluded++;
-    else existing.inventory_candidates++;
-    result.set(vault.chainId, existing);
-  }
-  return result;
+function logRpcDiagnostic(vault: InventoryVault, error: unknown, detection?: VaultDetection): void {
+  const detail = describeRpcFailure(error);
+  const vaultType = detection?.vaultType ?? "unknown";
+  const codeExists = detection?.codeExists === undefined ? "unknown" : String(detection.codeExists);
+  const codeSize = detection?.codeSize ?? -1;
+  console.error(
+    `[rpc diagnostic] chain=${vault.chainId} vault=${vault.address.toLowerCase()} vault_type=${vaultType} code_exists=${codeExists} code_size=${codeSize} operation=${detail.operation} function=${detail.functionAttempted} short_message=${JSON.stringify(detail.shortMessage)} cause=${JSON.stringify(detail.cause)} rpc_attempts=${detail.rpcAttempts} fallback_attempts=${detail.fallbackAttempts} endpoints_tried=${detail.endpointsTried}`,
+  );
 }
 
 export async function runMonitor(config: MonitorConfig): Promise<void> {
@@ -165,6 +256,7 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
   const notifications: NotificationEvent[] = [];
   const issues: CoverageIssue[] = [];
   const snapshots: MarketSnapshot[] = [];
+  const riskNotApplicableMarkets: RiskNotApplicableMarket[] = [];
   const engineOptions: EngineOptions = {
     materialUtilJumpPp: config.materialUtilJumpPp,
     largeEventUsdMin: config.largeEventUsdMin,
@@ -175,10 +267,11 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
   if (!productionStateSafe) issues.push(issueFor(undefined, "state", loadedState.reason ?? "persistent state is invalid"));
 
   let inventory: InventoryVault[] = [];
-  let coverage = new Map<number, ChainCoverage>();
+  let coverage: CoverageTracker | undefined;
   try {
     inventory = await loadInventory(config.inventoryUrl, config.inventoryPath);
-    coverage = makeCoverage(inventory);
+    coverage = new CoverageTracker(inventory);
+    const coverageTracker = coverage;
     const inventoryKeys = new Set(inventory.map((vault) => marketKey(vault.chainId, vault.address)));
     for (const key of Object.keys(next.markets)) if (!inventoryKeys.has(key)) delete next.markets[key];
     const excluded = inventory.filter((vault) => vault.statusDecision === "exclude");
@@ -190,18 +283,52 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
       const endpoints = config.rpcUrls[vault.chainId];
       if (!endpoints?.length) {
         issues.push(issueFor(vault, "rpc", "missing RPC configuration"));
-        coverage.get(vault.chainId)!.unresolved++;
+        coverageTracker.mark(vault, "eligibility-unresolved");
+        return null;
+      }
+      const deployment = EULER_DEPLOYMENTS[vault.chainId];
+      if (!deployment) {
+        issues.push(issueFor(vault, "collector", "missing canonical Euler deployment metadata"));
+        coverageTracker.mark(vault, "eligibility-unresolved");
         return null;
       }
       const pool = new RpcPool(vault.chainId, endpoints);
+      let detection: VaultDetection | undefined;
       try {
-        const result = await pool.withClient("deposit-gate", (client) => readStage1(client, vault.address));
-        return { vault, pool, asset: result.asset, decimals: result.decimals, symbol: result.symbol, totalAssets: result.totalAssets };
+        detection = await pool.withClient("vault-detection", (client) => detectVault(client, vault.address, deployment));
+        if (detection.vaultType === "non-vault") {
+          const reason = `unsupported/non-vault contract; code_exists=${detection.codeExists} code_size=${detection.codeSize}`;
+          issues.push(issueFor(vault, "collector", reason));
+          coverageTracker.mark(vault, "eligibility-unresolved");
+          console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=collector reason=${reason}`);
+          return null;
+        }
+        const result = await pool.withClient("deposit-gate", (client) => readStage1(client, vault.address, detection!));
+        if (!result.riskApplicable) {
+          coverageTracker.mark(vault, "risk-not-applicable");
+          riskNotApplicableMarkets.push({
+            chain_id: vault.chainId,
+            chain_name: vault.chainName,
+            vault_address: vault.address.toLowerCase() as Address,
+            vault_type: detection.vaultType,
+            block_number: result.blockNumber.toString(),
+            reason: result.riskNotApplicableReason!,
+            interest_rate_model: result.interestRateModel!.toLowerCase() as Address,
+            total_borrows_raw: result.totalBorrows!.toString(),
+            collateral_count: result.collateralCount!,
+            borrow_cap: result.borrowCap!.toString(),
+          });
+          next.markets[marketKey(vault.chainId, vault.address)] = ineligibleState(vault, null, result.totalAssets.toString(), startedAt, previous.markets[marketKey(vault.chainId, vault.address)]);
+          console.log(`[risk applicability] chain=${vault.chainId} vault=${vault.address.toLowerCase()} vault_type=${detection.vaultType} applicable=false reason=${result.riskNotApplicableReason} code_size=${detection.codeSize} borrow_cap=${result.borrowCap?.toString() ?? "unknown"}`);
+          return null;
+        }
+        return { vault, pool, detection, ...result };
       } catch (error) {
         const reason = safeErrorReason(error, "deposit-stage RPC read failed");
         issues.push(issueFor(vault, "rpc", reason));
-        coverage.get(vault.chainId)!.unresolved++;
+        coverageTracker.mark(vault, "eligibility-unresolved");
         console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=rpc reason=${reason}`);
+        logRpcDiagnostic(vault, error, detection);
         return null;
       }
     })).filter((value): value is Stage1Result => value !== null);
@@ -216,28 +343,52 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
       const { vault } = stage;
       const key = marketKey(vault.chainId, vault.address);
       const priorState = previous.markets[key];
-      const price = prices.get(vault.chainId)?.get(stage.asset.toLowerCase());
+      const deployment = EULER_DEPLOYMENTS[vault.chainId]!;
+      let price = prices.get(vault.chainId)?.get(stage.asset.toLowerCase());
+      if (!price) {
+        try {
+          price = await stage.pool.withClient("onchain-price", (client) => getOnchainVaultPrice(client, config.eulerV3Url, vault.chainId, deployment.utilsLens, vault.address, stage.detection.vaultType, stage.asset));
+          if (price) console.log(`[price fallback] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=euler-onchain`);
+        } catch (error) {
+          const reason = safeErrorReason(error, "on-chain USD price read failed");
+          issues.push(issueFor(vault, "price", reason));
+          coverageTracker.mark(vault, "eligibility-unresolved");
+          console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=price reason=${reason}`);
+          logRpcDiagnostic(vault, error, stage.detection);
+          return;
+        }
+      }
       if (!price) {
         const reason = "USD price unavailable; eligibility unresolved";
         issues.push(issueFor(vault, "price", reason));
-        coverage.get(vault.chainId)!.unresolved++;
+        coverageTracker.mark(vault, "eligibility-unresolved");
         console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=price reason=unavailable`);
         return;
       }
       const gateDepositsUsd = toTokenNumber(stage.totalAssets, stage.decimals) * price.price;
       if (!isDepositEligible(gateDepositsUsd, config.minDepositsUsd)) {
         next.markets[key] = ineligibleState(vault, gateDepositsUsd, stage.totalAssets.toString(), startedAt, priorState);
+        coverageTracker.mark(vault, "deposit-ineligible");
         console.log(`[deposit gate] chain=${vault.chainId} vault=${vault.address.toLowerCase()} eligible=false deposits_usd=${gateDepositsUsd.toFixed(2)}`);
         return;
       }
-      coverage.get(vault.chainId)!.deposit_eligible++;
+
+      if (stage.detection.vaultType !== "evault") {
+        const reason = stage.detection.vaultType === "euler-earn"
+          ? "EulerEarn aggregate has no contract-level utilization kink; allocated underlying EVault strategy coverage is required"
+          : "eligible non-EVault ERC4626 contract has no supported utilization/kink semantics";
+        issues.push(issueFor(vault, "collector", reason));
+        coverageTracker.mark(vault, "monitoring-unresolved");
+        console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=collector vault_type=${stage.detection.vaultType} reason=${reason}`);
+        return;
+      }
 
       try {
-        const risk = await stage.pool.withClient("risk-and-live-irm", (client) => readRisk(client, vault.address));
+        const risk = await stage.pool.withClient("risk-and-live-irm", (client) => readRisk(client, vault.address, deployment.irmLens));
         const depositsUsd = toTokenNumber(risk.totalAssets, stage.decimals) * price.price;
         if (!isDepositEligible(depositsUsd, config.minDepositsUsd)) {
           next.markets[key] = ineligibleState(vault, depositsUsd, risk.totalAssets.toString(), startedAt, priorState);
-          coverage.get(vault.chainId)!.deposit_eligible--;
+          coverageTracker.mark(vault, "deposit-ineligible");
           return;
         }
         const threshold = criticalThreshold(risk.irmInfo.targetPct, config.thresholdOffsetPp);
@@ -270,11 +421,7 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
           critical_threshold_pct: threshold,
         };
         snapshots.push(snapshot);
-        const completeIrmCoverage = risk.irmInfo.kind !== "unknown-kink";
-        if (!completeIrmCoverage) {
-          issues.push(issueFor(vault, "irm", "live kink found but IRM type/configuration is incomplete"));
-          coverage.get(vault.chainId)!.unresolved++;
-        }
+        let monitoringUnresolved = false;
 
         let events;
         if (needsEventInvestigation(priorState, snapshot, engineOptions) && priorState?.previous_successfully_processed_block) {
@@ -283,8 +430,9 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
           } catch (error) {
             const reason = safeErrorReason(error, "event query failed");
             issues.push(issueFor(vault, "events", reason));
-            coverage.get(vault.chainId)!.unresolved++;
+            monitoringUnresolved = true;
             console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=events reason=${reason}`);
+            logRpcDiagnostic(vault, error, stage.detection);
           }
         }
         const decision = evaluateMarket(priorState, snapshot, events, engineOptions);
@@ -298,20 +446,48 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
           notifications.push(makeNotification("recovery", startedAt, message, `${snapshot.block_number}:${snapshot.critical_threshold_pct}`, snapshot.chain_id, snapshot.vault_address));
         }
         next.markets[key] = marketStateFromSnapshot(priorState, snapshot, decision.notification, decision.nextAlertActive, decision.lastAlertUtilizationPct, startedAt);
-        if (completeIrmCoverage) coverage.get(vault.chainId)!.fully_monitored++;
+        coverageTracker.mark(vault, monitoringUnresolved ? "monitoring-unresolved" : "fully-monitored");
         console.log(`[decision] chain=${vault.chainId} vault=${vault.address.toLowerCase()} util=${snapshot.utilization_pct.toFixed(2)} threshold=${(config.testThresholdPct ?? threshold).toFixed(2)} result=${decision.notification ?? "silent"}`);
       } catch (error) {
-        const source: CoverageIssue["source"] = /IRM|kink|target/i.test(error instanceof Error ? error.message : "") ? "irm" : "rpc";
+        const diagnostic = describeRpcFailure(error);
+        const source: CoverageIssue["source"] = /IRM|kink|target/i.test(`${diagnostic.operation} ${diagnostic.functionAttempted} ${diagnostic.shortMessage}`) ? "irm" : "rpc";
         const reason = safeErrorReason(error, source === "irm" ? "live IRM read failed" : "risk-stage RPC read failed");
         issues.push(issueFor(vault, source, reason));
-        coverage.get(vault.chainId)!.unresolved++;
+        coverageTracker.mark(vault, "monitoring-unresolved");
         console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=${source} reason=${reason}`);
+        logRpcDiagnostic(vault, error, stage.detection);
       }
     });
   } catch (error) {
     const reason = safeErrorReason(error, "inventory/collector failure");
     issues.push(issueFor(undefined, "inventory", reason));
     console.error(`[coverage] source=inventory reason=${reason}`);
+  }
+
+  if (coverage) {
+    for (const vault of coverage.pending()) {
+      coverage.mark(vault, "eligibility-unresolved");
+      issues.push(issueFor(vault, "collector", "candidate left without a final coverage outcome"));
+    }
+  }
+  const coverageRows = coverage?.rows() ?? [];
+  let coverageTotals: CoverageTotals = {
+    risk_not_applicable: 0,
+    eligibility_unresolved: 0,
+    deposit_ineligible: 0,
+    deposit_eligible: 0,
+    fully_monitored: 0,
+    monitoring_unresolved: 0,
+    unresolved: 0,
+  };
+  try {
+    coverageTotals = assertCoverageInvariants(coverageRows);
+    assert.equal(coverageTotals.risk_not_applicable, riskNotApplicableMarkets.length, "risk-not-applicable detail rows must reconcile with coverage counters");
+    assert.ok(coverageTotals.fully_monitored <= snapshots.length, "fully monitored count cannot exceed successful snapshots");
+  } catch (error) {
+    const reason = error instanceof Error ? `coverage accounting invariant failed: ${error.message}` : "coverage accounting invariant failed";
+    issues.push(issueFor(undefined, "collector", reason));
+    console.error(`[coverage invariant] ${reason}`);
   }
 
   if (productionStateSafe) {
@@ -329,8 +505,7 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
   const completedAt = new Date().toISOString();
   const health = issues.length ? "degraded" : "healthy";
   const lifecycleExcluded = inventory.filter((vault) => vault.statusDecision === "exclude").length;
-  const coverageRows = [...coverage.values()].sort((a, b) => a.chain_id - b.chain_id);
-  for (const row of coverageRows) console.log(`[chain coverage] chain=${row.chain_id} candidates=${row.inventory_candidates} eligible=${row.deposit_eligible} monitored=${row.fully_monitored} unresolved=${row.unresolved}`);
+  for (const row of coverageRows) console.log(`[chain coverage] chain=${row.chain_id} candidates=${row.inventory_candidates} risk_not_applicable=${row.risk_not_applicable} eligibility_unresolved=${row.eligibility_unresolved} ineligible=${row.deposit_ineligible} eligible=${row.deposit_eligible} monitored=${row.fully_monitored} monitoring_unresolved=${row.monitoring_unresolved} unresolved=${row.unresolved}`);
 
   const latest: LatestFeed = {
     schema_version: 1,
@@ -346,10 +521,16 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
       total: inventory.length,
       lifecycle_excluded: lifecycleExcluded,
       candidates: inventory.length - lifecycleExcluded,
-      deposit_eligible: coverageRows.reduce((sum, row) => sum + row.deposit_eligible, 0),
-      fully_monitored: snapshots.length,
+      risk_not_applicable: coverageTotals.risk_not_applicable,
+      eligibility_unresolved: coverageTotals.eligibility_unresolved,
+      deposit_ineligible: coverageTotals.deposit_ineligible,
+      deposit_eligible: coverageTotals.deposit_eligible,
+      fully_monitored: coverageTotals.fully_monitored,
+      monitoring_unresolved: coverageTotals.monitoring_unresolved,
+      unresolved: coverageTotals.unresolved,
     },
     coverage: coverageRows,
+    risk_not_applicable_markets: riskNotApplicableMarkets.sort((a, b) => `${a.chain_id}:${a.vault_address}`.localeCompare(`${b.chain_id}:${b.vault_address}`)),
     issues,
     markets: snapshots.sort((a, b) => a.key.localeCompare(b.key)),
   };
@@ -359,13 +540,19 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
     `- Mode: ${mode}`,
     `- Inventory rows: ${inventory.length}`,
     `- Lifecycle excluded: ${lifecycleExcluded}`,
+    `- Risk not applicable: ${latest.inventory.risk_not_applicable}`,
+    `- Eligibility unresolved: ${latest.inventory.eligibility_unresolved}`,
+    `- Deposit ineligible: ${latest.inventory.deposit_ineligible}`,
     `- Deposit eligible: ${latest.inventory.deposit_eligible}`,
-    `- Fully monitored: ${snapshots.length}`,
+    `- Fully monitored: ${latest.inventory.fully_monitored}`,
+    `- Monitoring unresolved: ${latest.inventory.monitoring_unresolved}`,
+    `- Total unresolved: ${latest.inventory.unresolved}`,
     `- Coverage: ${health}`,
     `- Notifications generated: ${notifications.length}`,
     `- Feed output: ${mode === "production" ? "notifications.json" : "notifications-test.json"}`,
     "",
-    ...coverageRows.map((row) => `- Chain ${row.chain_id}: ${row.fully_monitored}/${row.deposit_eligible} eligible markets monitored; unresolved ${row.unresolved}`),
+    ...coverageRows.map((row) => `- Chain ${row.chain_id}: ${row.fully_monitored}/${row.deposit_eligible} eligible markets monitored; risk not applicable ${row.risk_not_applicable}; eligibility unresolved ${row.eligibility_unresolved}; monitoring unresolved ${row.monitoring_unresolved}; total unresolved ${row.unresolved}`),
+    ...(riskNotApplicableMarkets.length ? ["", "## Risk not applicable (live canonical configuration)", ...riskNotApplicableMarkets.map((market) => `- ${market.chain_id} ${market.vault_address}: ${market.reason}; IRM ${market.interest_rate_model}; borrows ${market.total_borrows_raw}; collateral LTVs ${market.collateral_count}`)] : []),
     ...(issues.length ? ["", "## Coverage issues", ...issues.map((issue) => `- ${issue.chain_id ?? "global"} ${issue.vault_address ?? ""} [${issue.source}] ${issue.reason}`)] : []),
     ...(notifications.length ? ["", "## Would-be/new notifications", ...notifications.map((notification) => `\n${notification.message}\n`)] : []),
   ].join("\n") + "\n";

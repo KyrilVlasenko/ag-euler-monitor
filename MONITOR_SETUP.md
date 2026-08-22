@@ -8,10 +8,12 @@ The hourly collector:
 
 1. downloads the current inventory from `KyrilVlasenko/ag-euler`;
 2. excludes only explicit inactive lifecycle prefixes and fails open on unknown status;
-3. performs a staged on-chain deposit check and retains only deposits strictly above $20,000;
-4. reads utilization, liquidity, borrow rate, active IRM, and the live kink/target directly from each chain;
-5. evaluates crossing, recovery, material-change, and coverage-health state;
-6. commits sanitized `state.json`, `latest.json`, `notifications.json`, and `summary.md` to `monitor-state`.
+3. detects every contract through Euler's canonical EVault and EulerEarn factories before making type-specific reads;
+4. classifies canonical EVaults with no IRM, no debt, and no collateral LTVs as explicitly risk-not-applicable because they cannot borrow in their current configuration;
+5. prices applicable vault assets through Euler V3 first, then the canonical controller oracle and UtilsLens with correct unit-of-account-to-USD conversion;
+6. retains only applicable markets with deposits strictly above $20,000 and decodes their IRMs through the canonical IRMLens;
+7. evaluates crossing, recovery, material-change, and coverage-health state;
+8. commits sanitized `state.json`, `latest.json`, `notifications.json`, and `summary.md` to `monitor-state`.
 
 Before public output is written or committed, an allowlist-based audit rejects credential fields, authorization material, private keys, RPC configuration names, obsolete provider fields, and non-public URL hosts. RPC endpoint URLs are never included in snapshots, errors, summaries, or logs. Do not put credentials in code, workflow variables, repository variables, inventory text, or committed files.
 
@@ -56,7 +58,7 @@ Actions → Euler Vault Utilization Monitor → Run workflow:
 
 The run performs the complete read and decision process, but it cannot update `monitor-state`. Review:
 
-- inventory, lifecycle, deposit-eligible, and fully monitored counts;
+- inventory, lifecycle, risk-not-applicable, deposit-ineligible, deposit-eligible, and fully monitored counts;
 - per-chain coverage;
 - RPC fallback and price fallback lines;
 - IRM or unresolved-data failures;
@@ -111,7 +113,9 @@ Each run logs inventory counts, lifecycle decisions, deposit eligibility, fully 
 
 Artifacts retain useful run files for 30 days. Production outputs also remain in the `monitor-state` Git history.
 
-Incomplete required coverage is never treated as a safe market. A missing RPC, price, IRM target, event query needed for attribution, or unreadable eligible market marks the run degraded. After two consecutive degraded production runs, the feed emits one `monitor_degraded` event. It stays silent on subsequent degraded runs, then emits one `monitor_restored` event when full coverage returns.
+Incomplete required coverage is never treated as a safe market. Every inventory candidate has exactly one mutually exclusive outcome: risk-not-applicable, eligibility-unresolved, deposit-ineligible, monitoring-unresolved, or fully-monitored. Per-chain and global counters are asserted to reconcile before output is written. A missing RPC, price, IRM target, event query needed for attribution, unsupported contract type, or unreadable eligible market marks the run degraded. After two consecutive degraded production runs, the feed emits one `monitor_degraded` event. It stays silent on subsequent degraded runs, then emits one `monitor_restored` event when full coverage returns.
+
+Risk-not-applicable is not a safety classification. It is used only when live canonical EVault reads simultaneously show no interest-rate model, zero debt, and no configured collateral LTVs. Such a vault has no contract-level borrow utilization or kink. This configuration is rechecked every run, so adding an IRM, debt, or collateral LTV immediately moves the vault back into strict eligibility and monitoring coverage.
 
 Malformed or unreadable persistent state is treated more strictly: market-transition notifications are suppressed, an immediate stable degraded event is produced, and the workflow preserves the existing `state.json` instead of replacing it with a fresh baseline.
 
@@ -119,12 +123,13 @@ Malformed or unreadable persistent state is treated more strictly: market-transi
 
 - `missing RPC configuration`: add an endpoint array for the reported chain ID.
 - `deposit-stage RPC read failed`: verify chain ID, endpoint health, and read permissions.
-- `USD price unavailable`: both Euler V3 enrichment and DefiLlama fallback failed or lacked the asset; the vault remains unresolved rather than excluded.
-- `live IRM read failed`: the active IRM has no supported live kink/target getter; add verified support before claiming full coverage.
+- `USD price unavailable`: Euler V3 and the canonical on-chain Euler oracle/Lens route could not establish the asset price; the vault remains unresolved rather than excluded. Symbols and names never imply a $1 price.
+- `live IRM read failed`: canonical IRMLens could not type or decode an IRM with a meaningful utilization kink/target; add verified support before claiming full coverage.
 - `event query failed`: an alert candidate could not be fully attributed; check log-range support and provider limits.
+- `unsupported/non-vault contract`: the address was not recognized by the canonical factories and did not expose the required ERC-4626 surface; it remains unresolved.
 - stale inventory/feed: inspect the workflow run and GitHub schedule status.
 
-An active EulerEarn row that becomes deposit-eligible but does not expose EVault borrowing/IRM methods will correctly appear as unresolved coverage. It must not be silently classified as safe.
+An active EulerEarn row that becomes deposit-eligible will correctly appear as unresolved until every allocated underlying EVault strategy is covered. EulerEarn is an ERC-4626 aggregate with no contract-level borrow utilization or IRM; excluding the aggregate without checking its strategies would hide the lending risk rather than resolve it.
 
 ## 9. Adding a new chain
 
