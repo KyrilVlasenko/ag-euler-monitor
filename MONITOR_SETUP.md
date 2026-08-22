@@ -25,7 +25,7 @@ Add exactly one required secret:
 
 - `RPC_URLS_JSON`
 
-It must be a JSON object keyed by numeric chain ID. Each value is an array containing one or more HTTPS read-only RPC endpoints. Endpoint order is failover order.
+It must be a JSON object keyed by numeric chain ID. Each value is an array containing one or more HTTPS read-only RPC endpoints. Endpoint order is failover order. At the start of every run, every endpoint must return the expected `eth_chainId`, a current `eth_blockNumber`, and non-empty `eth_getCode` for that chain's canonical Euler EVault factory canary. A failing or wrong-chain endpoint is quarantined for the rest of the run.
 
 The current inventory contains these chains:
 
@@ -40,7 +40,9 @@ The current inventory contains these chains:
 }
 ```
 
-One endpoint per chain is accepted, but two independent providers are recommended. Never add wallet keys or transaction-signing credentials. No transaction signing is used.
+One endpoint per chain is accepted, but at least two independent providers are strongly recommended. With only one endpoint, an empty-code response can be confirmed only by that one validated provider. Never add wallet keys or transaction-signing credentials. No transaction signing is used.
+
+The four known Unichain EVaults implicated by inconsistent provider responses are checked against every validated Unichain endpoint on every run. Other inventory contracts query the primary first and fan out to every fallback whenever the primary returns empty code or errors.
 
 ## 2. Verify workflow permissions
 
@@ -109,7 +111,7 @@ Any run with a test threshold is isolated regardless of the dry-run selection. I
 
 ## 7. Logs, artifacts, and health
 
-Each run logs inventory counts, lifecycle decisions, deposit eligibility, fully monitored counts, per-chain coverage, RPC fallback activity by endpoint number, price fallback activity, IRM failures, alert decisions, and feed output. Endpoint URLs and raw exceptions are not logged.
+Each run logs inventory counts, lifecycle decisions, deposit eligibility, fully monitored counts, per-chain coverage, RPC validation/quarantine and fallback activity by endpoint number, code-response disagreements, price fallback activity, IRM failures, alert decisions, and feed output. Endpoint URLs and raw exceptions are not logged. `latest.json` and the Markdown summary separately report confirmed no-code, RPC disagreement, RPC unavailable, and genuine unsupported-contract findings.
 
 Artifacts retain useful run files for 30 days. Production outputs also remain in the `monitor-state` Git history.
 
@@ -123,10 +125,13 @@ Malformed or unreadable persistent state is treated more strictly: market-transi
 
 - `missing RPC configuration`: add an endpoint array for the reported chain ID.
 - `deposit-stage RPC read failed`: verify chain ID, endpoint health, and read permissions.
+- `confirmed no-code across all healthy RPCs`: every endpoint that passed chain-ID, block-height, and canary validation returned empty bytecode at the common confirmed block. This remains unresolved and is not an unsupported-contract classification.
+- `RPC disagreement`: at least one endpoint returned empty code while another returned contract code. The empty-code endpoint is quarantined, the market continues on the code-producing endpoint, and the disagreement remains visible in RPC quality output.
+- `RPC unavailable during multi-endpoint code verification`: an endpoint errored and no other validated endpoint established contract code; code existence remains unresolved.
 - `USD price unavailable`: Euler V3 and the canonical on-chain Euler oracle/Lens route could not establish the asset price; the vault remains unresolved rather than excluded. Symbols and names never imply a $1 price.
 - `live IRM read failed`: canonical IRMLens could not type or decode an IRM with a meaningful utilization kink/target; add verified support before claiming full coverage.
 - `event query failed`: an alert candidate could not be fully attributed; check log-range support and provider limits.
-- `unsupported/non-vault contract`: the address was not recognized by the canonical factories and did not expose the required ERC-4626 surface; it remains unresolved.
+- `genuine unsupported contract`: bytecode was first established, but the address was not recognized by the canonical factories and did not expose the required ERC-4626 surface; it remains unresolved.
 - stale inventory/feed: inspect the workflow run and GitHub schedule status.
 
 An active EulerEarn row that becomes deposit-eligible will correctly appear as unresolved until every allocated underlying EVault strategy is covered. EulerEarn is an ERC-4626 aggregate with no contract-level borrow utilization or IRM; excluding the aggregate without checking its strategies would hide the lending risk rather than resolve it.

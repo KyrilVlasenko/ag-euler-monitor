@@ -71,6 +71,18 @@ export const EULER_DEPLOYMENTS: Record<number, EulerDeployment> = {
   },
 };
 
+// These confirmed contracts are checked against every validated endpoint on
+// each run, even when the primary returns code. This makes provider-specific
+// empty-code anomalies visible before the addresses drive risk decisions.
+export const FULL_RPC_CODE_CHECKS: Partial<Record<number, Address[]>> = {
+  130: [
+    "0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc",
+    "0xe36da4ea4d07e54b1029ef26a896a656a3729f86",
+    "0x54ff502df96cd9b9585094eacd86aafce902d06a",
+    "0xd325a54926c937710daa1b46d1c6587155084a63",
+  ],
+};
+
 export type ExecutionMode = "production" | "dry-run" | "test";
 
 export function executionMode(dryRun: boolean, testThresholdPct?: number): ExecutionMode {

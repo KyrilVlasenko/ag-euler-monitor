@@ -3,10 +3,10 @@ import { criticalThreshold, evaluateMarket, isDepositEligible, needsEventInvesti
 import { buildNotificationFeed, formatHealth, formatRecovery, formatRiskAlert, makeNotification } from "./format.js";
 import { loadInventory } from "./inventory.js";
 import { getOnchainVaultPrice, getPrices } from "./prices.js";
-import { borrowApyPct, describeRpcFailure, detectVault, readEvents, readRisk, readStage1, RpcPool, toTokenNumber, utilizationPct, type Stage1Read, type VaultDetection } from "./rpc.js";
+import { borrowApyPct, describeRpcFailure, detectVault, readEvents, readRisk, readStage1, RpcPool, toTokenNumber, utilizationPct, type ContractCodeVerification, type Stage1Read, type VaultDetection } from "./rpc.js";
 import { safeErrorReason } from "./security.js";
 import { loadState, writePublicJson, writePublicText } from "./state.js";
-import { EULER_DEPLOYMENTS, executionMode, marketKey, type MonitorConfig } from "./config.js";
+import { EULER_DEPLOYMENTS, executionMode, FULL_RPC_CODE_CHECKS, marketKey, type MonitorConfig } from "./config.js";
 import type {
   Address,
   ChainCoverage,
@@ -19,6 +19,7 @@ import type {
   NotificationEvent,
   NotificationFeed,
   RiskNotApplicableMarket,
+  RpcQualityReport,
 } from "./types.js";
 
 interface Stage1Result extends Stage1Read {
@@ -257,6 +258,8 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
   const issues: CoverageIssue[] = [];
   const snapshots: MarketSnapshot[] = [];
   const riskNotApplicableMarkets: RiskNotApplicableMarket[] = [];
+  const rpcPools = new Map<number, RpcPool>();
+  const codeVerifications = new Map<string, ContractCodeVerification>();
   const engineOptions: EngineOptions = {
     materialUtilJumpPp: config.materialUtilJumpPp,
     largeEventUsdMin: config.largeEventUsdMin,
@@ -279,6 +282,22 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
     for (const vault of excluded) next.markets[marketKey(vault.chainId, vault.address)] = ineligibleState(vault, null, null, startedAt, previous.markets[marketKey(vault.chainId, vault.address)]);
     console.log(`[inventory] total=${inventory.length} lifecycle_excluded=${excluded.length} candidates=${candidates.length}`);
 
+    for (const chainId of [...new Set(candidates.map((vault) => vault.chainId))].sort((a, b) => a - b)) {
+      const endpoints = config.rpcUrls[chainId];
+      const deployment = EULER_DEPLOYMENTS[chainId];
+      if (!endpoints?.length || !deployment) continue;
+      const pool = new RpcPool(chainId, endpoints);
+      await pool.initialize(deployment.eVaultFactory);
+      rpcPools.set(chainId, pool);
+      const fullChecks = new Set((FULL_RPC_CODE_CHECKS[chainId] ?? []).map((address) => address.toLowerCase()));
+      const chainCandidates = candidates.filter((candidate) => candidate.chainId === chainId);
+      for (const vault of chainCandidates) {
+        codeVerifications.set(marketKey(chainId, vault.address), await pool.verifyContractCode(vault.address, fullChecks.has(vault.address.toLowerCase())));
+        fullChecks.delete(vault.address.toLowerCase());
+      }
+      for (const address of fullChecks) await pool.verifyContractCode(address as Address, true);
+    }
+
     const stage1 = (await mapLimit(candidates, 8, async (vault): Promise<Stage1Result | null> => {
       const endpoints = config.rpcUrls[vault.chainId];
       if (!endpoints?.length) {
@@ -292,12 +311,33 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
         coverageTracker.mark(vault, "eligibility-unresolved");
         return null;
       }
-      const pool = new RpcPool(vault.chainId, endpoints);
+      const pool = rpcPools.get(vault.chainId);
+      if (!pool) {
+        issues.push(issueFor(vault, "rpc", "RPC pool unavailable after endpoint validation"));
+        coverageTracker.mark(vault, "eligibility-unresolved");
+        return null;
+      }
+      const verification = codeVerifications.get(marketKey(vault.chainId, vault.address));
+      if (!verification || verification.status === "rpc-unavailable" || verification.blockNumber === null) {
+        const reason = "RPC unavailable during multi-endpoint code verification; code existence unresolved";
+        issues.push(issueFor(vault, "rpc", reason));
+        coverageTracker.mark(vault, "eligibility-unresolved");
+        console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=rpc classification=rpc-unavailable reason=${reason}`);
+        return null;
+      }
+      if (verification.status === "confirmed-no-code") {
+        const reason = `confirmed no-code across all healthy RPCs at block ${verification.blockNumber}; endpoints=${verification.emptyCodeEndpoints.join(",")}`;
+        issues.push(issueFor(vault, "collector", reason));
+        coverageTracker.mark(vault, "eligibility-unresolved");
+        console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=collector classification=confirmed-no-code reason=${reason}`);
+        return null;
+      }
       let detection: VaultDetection | undefined;
       try {
-        detection = await pool.withClient("vault-detection", (client) => detectVault(client, vault.address, deployment));
+        detection = await pool.withClient("vault-detection", (client) => detectVault(client, vault.address, deployment, { blockNumber: verification.blockNumber!, codeSize: verification.codeSize }));
         if (detection.vaultType === "non-vault") {
-          const reason = `unsupported/non-vault contract; code_exists=${detection.codeExists} code_size=${detection.codeSize}`;
+          pool.recordUnsupportedContract(vault.address, detection.blockNumber);
+          const reason = `genuine unsupported contract; code_exists=${detection.codeExists} code_size=${detection.codeSize}`;
           issues.push(issueFor(vault, "collector", reason));
           coverageTracker.mark(vault, "eligibility-unresolved");
           console.error(`[coverage] chain=${vault.chainId} vault=${vault.address.toLowerCase()} source=collector reason=${reason}`);
@@ -506,6 +546,11 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
   const health = issues.length ? "degraded" : "healthy";
   const lifecycleExcluded = inventory.filter((vault) => vault.statusDecision === "exclude").length;
   for (const row of coverageRows) console.log(`[chain coverage] chain=${row.chain_id} candidates=${row.inventory_candidates} risk_not_applicable=${row.risk_not_applicable} eligibility_unresolved=${row.eligibility_unresolved} ineligible=${row.deposit_ineligible} eligible=${row.deposit_eligible} monitored=${row.fully_monitored} monitoring_unresolved=${row.monitoring_unresolved} unresolved=${row.unresolved}`);
+  const rpcQuality: RpcQualityReport = {
+    chains: [...rpcPools.values()].map((pool) => pool.qualitySummary()).sort((a, b) => a.chain_id - b.chain_id),
+    findings: [...rpcPools.values()].flatMap((pool) => pool.qualityFindings()).sort((a, b) => `${a.chain_id}:${a.address ?? ""}:${a.phase}`.localeCompare(`${b.chain_id}:${b.address ?? ""}:${b.phase}`)),
+  };
+  for (const chain of rpcQuality.chains) console.log(`[rpc quality] chain=${chain.chain_id} configured=${chain.configured_endpoints} healthy=${chain.healthy_endpoints} quarantined=${chain.quarantined_endpoints} confirmed_no_code=${chain.confirmed_no_code_markets} disagreements=${chain.rpc_disagreement_markets} unavailable_events=${chain.rpc_unavailable_events} unsupported=${chain.unsupported_contracts}`);
 
   const latest: LatestFeed = {
     schema_version: 1,
@@ -530,6 +575,7 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
       unresolved: coverageTotals.unresolved,
     },
     coverage: coverageRows,
+    rpc_quality: rpcQuality,
     risk_not_applicable_markets: riskNotApplicableMarkets.sort((a, b) => `${a.chain_id}:${a.vault_address}`.localeCompare(`${b.chain_id}:${b.vault_address}`)),
     issues,
     markets: snapshots.sort((a, b) => a.key.localeCompare(b.key)),
@@ -552,6 +598,10 @@ export async function runMonitor(config: MonitorConfig): Promise<void> {
     `- Feed output: ${mode === "production" ? "notifications.json" : "notifications-test.json"}`,
     "",
     ...coverageRows.map((row) => `- Chain ${row.chain_id}: ${row.fully_monitored}/${row.deposit_eligible} eligible markets monitored; risk not applicable ${row.risk_not_applicable}; eligibility unresolved ${row.eligibility_unresolved}; monitoring unresolved ${row.monitoring_unresolved}; total unresolved ${row.unresolved}`),
+    "",
+    "## RPC quality",
+    ...rpcQuality.chains.map((chain) => `- Chain ${chain.chain_id}: endpoints ${chain.healthy_endpoints}/${chain.configured_endpoints} healthy, ${chain.quarantined_endpoints} quarantined; confirmed no-code ${chain.confirmed_no_code_markets}; RPC disagreements ${chain.rpc_disagreement_markets}; RPC unavailable events ${chain.rpc_unavailable_events}; unsupported contracts ${chain.unsupported_contracts}`),
+    ...rpcQuality.findings.map((finding) => `- Chain ${finding.chain_id} ${finding.address ?? "chain endpoint"}: ${finding.classification}; phase ${finding.phase}; fallback resolved ${finding.resolved_by_fallback}; block ${finding.block_number ?? "unavailable"}; code endpoints [${finding.code_endpoints.join(",")}]; empty endpoints [${finding.empty_code_endpoints.join(",")}]; error endpoints [${finding.error_endpoints.join(",")}]; ${finding.detail}`),
     ...(riskNotApplicableMarkets.length ? ["", "## Risk not applicable (live canonical configuration)", ...riskNotApplicableMarkets.map((market) => `- ${market.chain_id} ${market.vault_address}: ${market.reason}; IRM ${market.interest_rate_model}; borrows ${market.total_borrows_raw}; collateral LTVs ${market.collateral_count}`)] : []),
     ...(issues.length ? ["", "## Coverage issues", ...issues.map((issue) => `- ${issue.chain_id ?? "global"} ${issue.vault_address ?? ""} [${issue.source}] ${issue.reason}`)] : []),
     ...(notifications.length ? ["", "## Would-be/new notifications", ...notifications.map((notification) => `\n${notification.message}\n`)] : []),

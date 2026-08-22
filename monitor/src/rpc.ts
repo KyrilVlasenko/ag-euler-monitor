@@ -1,7 +1,7 @@
 import { createPublicClient, decodeAbiParameters, formatUnits, http, type PublicClient } from "viem";
 import { ERC20Abi, EulerEarnFactoryAbi, EVaultAbi, GenericFactoryAbi, IrmLensAbi } from "./abis.js";
 import type { EulerDeployment } from "./config.js";
-import type { Address, EventAmounts, EventSummary, Hex, IrmKind, VaultType } from "./types.js";
+import type { Address, EventAmounts, EventSummary, Hex, IrmKind, RpcChainQuality, RpcQualityFinding, VaultType } from "./types.js";
 
 const SECONDS_PER_YEAR = 365.2425 * 86_400;
 const RAY = 1e27;
@@ -104,6 +104,10 @@ export function createClient(url: string): PublicClient {
   });
 }
 
+function bytecodeSize(code: Hex | undefined): number {
+  return code && code !== "0x" ? Math.max(0, (code.length - 2) / 2) : 0;
+}
+
 export async function runWithFailover<T>(
   endpointCount: number,
   operation: (endpointIndex: number) => Promise<T>,
@@ -132,33 +136,296 @@ export async function runWithFailover<T>(
 }
 
 export class RpcPool {
-  private readonly clients: PublicClient[];
+  private readonly endpoints: Array<{
+    index: number;
+    client: PublicClient;
+    status: "pending" | "healthy" | "quarantined";
+    blockNumber?: bigint;
+    quarantineReason?: string;
+  }>;
+  private readonly findings: RpcQualityFinding[] = [];
+  private initialized = false;
+  private commonConfirmedBlock?: bigint;
+  private readonly confirmationBlocks: bigint;
 
-  constructor(readonly chainId: number, endpoints: string[]) {
-    this.clients = endpoints.map(createClient);
+  constructor(
+    readonly chainId: number,
+    endpointUrls: string[],
+    options: { clientFactory?: (url: string, index: number) => PublicClient; confirmationBlocks?: bigint } = {},
+  ) {
+    const clientFactory = options.clientFactory ?? ((url: string) => createClient(url));
+    this.confirmationBlocks = options.confirmationBlocks ?? 12n;
+    this.endpoints = endpointUrls.map((url, index) => ({ index, client: clientFactory(url, index), status: "pending" }));
+  }
+
+  private healthy() {
+    return this.endpoints.filter((endpoint) => endpoint.status === "healthy");
+  }
+
+  private quarantine(index: number, reason: string): void {
+    const endpoint = this.endpoints[index];
+    if (!endpoint || endpoint.status === "quarantined") return;
+    endpoint.status = "quarantined";
+    endpoint.quarantineReason = reason;
+    console.warn(`[rpc quarantine] chain=${this.chainId} endpoint=${index + 1} reason=${reason}`);
+  }
+
+  private addFinding(finding: Omit<RpcQualityFinding, "chain_id">): void {
+    this.findings.push({ chain_id: this.chainId, ...finding });
+  }
+
+  async initialize(canary: Address): Promise<void> {
+    if (this.initialized) return;
+    await Promise.all(this.endpoints.map(async (endpoint) => {
+      try {
+        const actualChainId = await endpoint.client.getChainId();
+        if (actualChainId !== this.chainId) {
+          this.quarantine(endpoint.index, `wrong-chain expected=${this.chainId} actual=${actualChainId}`);
+          this.addFinding({
+            address: null,
+            phase: "endpoint-validation",
+            classification: "rpc-unavailable",
+            resolved_by_fallback: false,
+            block_number: null,
+            code_endpoints: [],
+            empty_code_endpoints: [],
+            error_endpoints: [endpoint.index + 1],
+            detail: `endpoint ${endpoint.index + 1} returned wrong chain ID`,
+          });
+          return;
+        }
+        endpoint.blockNumber = await endpoint.client.getBlockNumber();
+        endpoint.status = "healthy";
+      } catch (error) {
+        this.quarantine(endpoint.index, `validation-failed error=${errorName(error)}`);
+        this.addFinding({
+          address: null,
+          phase: "endpoint-validation",
+          classification: "rpc-unavailable",
+          resolved_by_fallback: false,
+          block_number: null,
+          code_endpoints: [],
+          empty_code_endpoints: [],
+          error_endpoints: [endpoint.index + 1],
+          detail: `endpoint ${endpoint.index + 1} failed chain ID or block-number validation`,
+        });
+      }
+    }));
+
+    const validated = this.healthy();
+    if (validated.length) {
+      const minimumBlock = validated.reduce((minimum, endpoint) => endpoint.blockNumber! < minimum ? endpoint.blockNumber! : minimum, validated[0]!.blockNumber!);
+      this.commonConfirmedBlock = minimumBlock > this.confirmationBlocks ? minimumBlock - this.confirmationBlocks : 0n;
+      await Promise.all(validated.map(async (endpoint) => {
+        try {
+          const code = await endpoint.client.getCode({ address: canary, blockNumber: this.commonConfirmedBlock! });
+          if (bytecodeSize(code) > 0) return;
+          this.quarantine(endpoint.index, "canary-empty-code");
+          this.addFinding({
+            address: canary.toLowerCase() as Address,
+            phase: "canary",
+            classification: "rpc-unavailable",
+            resolved_by_fallback: false,
+            block_number: this.commonConfirmedBlock!.toString(),
+            code_endpoints: [],
+            empty_code_endpoints: [endpoint.index + 1],
+            error_endpoints: [],
+            detail: `endpoint ${endpoint.index + 1} returned empty code for the canonical chain canary`,
+          });
+        } catch (error) {
+          this.quarantine(endpoint.index, `canary-read-failed error=${errorName(error)}`);
+          this.addFinding({
+            address: canary.toLowerCase() as Address,
+            phase: "canary",
+            classification: "rpc-unavailable",
+            resolved_by_fallback: false,
+            block_number: this.commonConfirmedBlock!.toString(),
+            code_endpoints: [],
+            empty_code_endpoints: [],
+            error_endpoints: [endpoint.index + 1],
+            detail: `endpoint ${endpoint.index + 1} failed the canonical chain canary read`,
+          });
+        }
+      }));
+    }
+    this.initialized = true;
+    const validationRecovered = this.healthy().length > 0;
+    for (const finding of this.findings) {
+      if (finding.phase === "endpoint-validation" || finding.phase === "canary") finding.resolved_by_fallback = validationRecovered;
+    }
+    console.log(`[rpc validation] chain=${this.chainId} configured=${this.endpoints.length} healthy=${this.healthy().length} quarantined=${this.endpoints.length - this.healthy().length} common_confirmed_block=${this.commonConfirmedBlock?.toString() ?? "unavailable"}`);
   }
 
   async withClient<T>(label: string, operation: (client: PublicClient) => Promise<T>): Promise<T> {
+    if (!this.initialized) throw new Error("RPC pool must be validated before use");
+    const healthy = this.healthy();
+    if (!healthy.length) throw new RpcOperationError(label, 0, 0, 0, new Error("no healthy RPC endpoints available"));
     let rpcAttempts = 0;
     let fallbackAttempts = 0;
     const endpoints = new Set<number>();
     try {
       return await runWithFailover(
-        this.clients.length,
+        healthy.length,
         (index) => {
           rpcAttempts++;
-          endpoints.add(index);
-          return operation(this.clients[index]!);
+          const endpoint = healthy[index]!;
+          endpoints.add(endpoint.index);
+          return operation(endpoint.client);
         },
         (failed, next) => {
           fallbackAttempts++;
-          console.warn(`[rpc fallback] chain=${this.chainId} operation=${label} endpoint=${failed + 1}->${next + 1}`);
+          console.warn(`[rpc fallback] chain=${this.chainId} operation=${label} endpoint=${healthy[failed]!.index + 1}->${healthy[next]!.index + 1}`);
         },
       );
     } catch (error) {
       throw new RpcOperationError(label, rpcAttempts, fallbackAttempts, endpoints.size, error);
     }
   }
+
+  async verifyContractCode(address: Address, queryAllHealthy = false): Promise<ContractCodeVerification> {
+    if (!this.initialized) throw new Error("RPC pool must be validated before code verification");
+    const healthy = this.healthy();
+    const blockNumber = this.commonConfirmedBlock;
+    if (!healthy.length || blockNumber === undefined) {
+      this.addFinding({
+        address: address.toLowerCase() as Address,
+        phase: "inventory-code",
+        classification: "rpc-unavailable",
+        resolved_by_fallback: false,
+        block_number: null,
+        code_endpoints: [],
+        empty_code_endpoints: [],
+        error_endpoints: healthy.map((endpoint) => endpoint.index + 1),
+        detail: "no validated healthy RPC endpoint was available for code verification",
+      });
+      return { status: "rpc-unavailable", blockNumber: null, codeSize: 0, codeEndpoints: [], emptyCodeEndpoints: [], errorEndpoints: healthy.map((endpoint) => endpoint.index + 1) };
+    }
+
+    const codeResults: Array<{ endpoint: number; codeSize: number }> = [];
+    const errorEndpoints: number[] = [];
+    const query = async (endpoint: (typeof healthy)[number]): Promise<void> => {
+      try {
+        const code = await endpoint.client.getCode({ address, blockNumber });
+        codeResults.push({ endpoint: endpoint.index, codeSize: bytecodeSize(code) });
+      } catch {
+        errorEndpoints.push(endpoint.index);
+      }
+    };
+
+    await query(healthy[0]!);
+    if (queryAllHealthy || !codeResults[0]?.codeSize || errorEndpoints.length) {
+      for (const endpoint of healthy.slice(1)) await query(endpoint);
+    }
+
+    const codeEndpoints = codeResults.filter((result) => result.codeSize > 0).map((result) => result.endpoint);
+    const emptyEndpoints = codeResults.filter((result) => result.codeSize === 0).map((result) => result.endpoint);
+    if (queryAllHealthy) {
+      console.log(`[rpc full code check] chain=${this.chainId} vault=${address.toLowerCase()} block=${blockNumber} code_endpoints=${codeEndpoints.map((index) => index + 1).join(",") || "none"} empty_endpoints=${emptyEndpoints.map((index) => index + 1).join(",") || "none"} error_endpoints=${errorEndpoints.map((index) => index + 1).join(",") || "none"}`);
+    }
+    if (codeEndpoints.length) {
+      if (emptyEndpoints.length) {
+        for (const index of emptyEndpoints) this.quarantine(index, `anomalous-empty-code address=${address.toLowerCase()}`);
+        this.addFinding({
+          address: address.toLowerCase() as Address,
+          phase: "inventory-code",
+          classification: "rpc-disagreement",
+          resolved_by_fallback: true,
+          block_number: blockNumber.toString(),
+          code_endpoints: codeEndpoints.map((index) => index + 1),
+          empty_code_endpoints: emptyEndpoints.map((index) => index + 1),
+          error_endpoints: errorEndpoints.map((index) => index + 1),
+          detail: "empty code from one endpoint contradicted non-empty code from another; empty-code endpoint quarantined",
+        });
+        console.warn(`[rpc disagreement] chain=${this.chainId} vault=${address.toLowerCase()} block=${blockNumber} empty_endpoints=${emptyEndpoints.map((index) => index + 1).join(",")} code_endpoints=${codeEndpoints.map((index) => index + 1).join(",")}`);
+      }
+      if (errorEndpoints.length) {
+        for (const index of errorEndpoints) this.quarantine(index, `inventory-code-read-failed address=${address.toLowerCase()}`);
+        this.addFinding({
+          address: address.toLowerCase() as Address,
+          phase: "inventory-code",
+          classification: "rpc-unavailable",
+          resolved_by_fallback: true,
+          block_number: blockNumber.toString(),
+          code_endpoints: codeEndpoints.map((index) => index + 1),
+          empty_code_endpoints: emptyEndpoints.map((index) => index + 1),
+          error_endpoints: errorEndpoints.map((index) => index + 1),
+          detail: "an endpoint failed code verification; another validated endpoint returned contract code",
+        });
+      }
+      const codeSize = codeResults.find((result) => result.codeSize > 0)!.codeSize;
+      return { status: "contract", blockNumber, codeSize, codeEndpoints: codeEndpoints.map((index) => index + 1), emptyCodeEndpoints: emptyEndpoints.map((index) => index + 1), errorEndpoints: errorEndpoints.map((index) => index + 1) };
+    }
+
+    if (errorEndpoints.length) {
+      for (const index of errorEndpoints) this.quarantine(index, `inventory-code-read-failed address=${address.toLowerCase()}`);
+      this.addFinding({
+        address: address.toLowerCase() as Address,
+        phase: "inventory-code",
+        classification: "rpc-unavailable",
+        resolved_by_fallback: false,
+        block_number: blockNumber.toString(),
+        code_endpoints: [],
+        empty_code_endpoints: emptyEndpoints.map((index) => index + 1),
+        error_endpoints: errorEndpoints.map((index) => index + 1),
+        detail: "code existence is unresolved because not every healthy endpoint completed the read",
+      });
+      return { status: "rpc-unavailable", blockNumber, codeSize: 0, codeEndpoints: [], emptyCodeEndpoints: emptyEndpoints.map((index) => index + 1), errorEndpoints: errorEndpoints.map((index) => index + 1) };
+    }
+
+    this.addFinding({
+      address: address.toLowerCase() as Address,
+      phase: "inventory-code",
+      classification: "confirmed-no-code",
+      resolved_by_fallback: false,
+      block_number: blockNumber.toString(),
+      code_endpoints: [],
+      empty_code_endpoints: emptyEndpoints.map((index) => index + 1),
+      error_endpoints: [],
+      detail: "every validated healthy RPC endpoint returned empty code at the common confirmed block",
+    });
+    return { status: "confirmed-no-code", blockNumber, codeSize: 0, codeEndpoints: [], emptyCodeEndpoints: emptyEndpoints.map((index) => index + 1), errorEndpoints: [] };
+  }
+
+  recordUnsupportedContract(address: Address, blockNumber: bigint): void {
+    this.addFinding({
+      address: address.toLowerCase() as Address,
+      phase: "contract-classification",
+      classification: "unsupported-contract",
+      resolved_by_fallback: false,
+      block_number: blockNumber.toString(),
+      code_endpoints: [],
+      empty_code_endpoints: [],
+      error_endpoints: [],
+      detail: "contract code exists, but canonical factories and the supported ERC-4626 interface did not recognize the contract",
+    });
+  }
+
+  qualityFindings(): RpcQualityFinding[] {
+    return this.findings.map((finding) => structuredClone(finding));
+  }
+
+  qualitySummary(): RpcChainQuality {
+    const distinctAddresses = (classification: RpcQualityFinding["classification"]): number => new Set(this.findings.filter((finding) => finding.classification === classification && finding.address).map((finding) => finding.address)).size;
+    return {
+      chain_id: this.chainId,
+      configured_endpoints: this.endpoints.length,
+      healthy_endpoints: this.healthy().length,
+      quarantined_endpoints: this.endpoints.length - this.healthy().length,
+      confirmed_no_code_markets: distinctAddresses("confirmed-no-code"),
+      rpc_disagreement_markets: distinctAddresses("rpc-disagreement"),
+      rpc_unavailable_events: this.findings.filter((finding) => finding.classification === "rpc-unavailable").length,
+      unsupported_contracts: distinctAddresses("unsupported-contract"),
+    };
+  }
+}
+
+export interface ContractCodeVerification {
+  status: "contract" | "confirmed-no-code" | "rpc-unavailable";
+  blockNumber: bigint | null;
+  codeSize: number;
+  codeEndpoints: number[];
+  emptyCodeEndpoints: number[];
+  errorEndpoints: number[];
 }
 
 export interface VaultDetection {
@@ -168,10 +435,9 @@ export interface VaultDetection {
   codeSize: number;
 }
 
-export async function detectVault(client: PublicClient, vault: Address, deployment: EulerDeployment): Promise<VaultDetection> {
-  const blockNumber = await taggedRead("eth_blockNumber", () => client.getBlockNumber());
-  const code = await taggedRead("eth_getCode", () => client.getCode({ address: vault, blockNumber }));
-  const codeSize = code ? Math.max(0, (code.length - 2) / 2) : 0;
+export async function detectVault(client: PublicClient, vault: Address, deployment: EulerDeployment, verified?: { blockNumber: bigint; codeSize: number }): Promise<VaultDetection> {
+  const blockNumber = verified?.blockNumber ?? await taggedRead("eth_blockNumber", () => client.getBlockNumber());
+  const codeSize = verified?.codeSize ?? bytecodeSize(await taggedRead("eth_getCode", () => client.getCode({ address: vault, blockNumber })));
   if (!codeSize) return { blockNumber, vaultType: "non-vault", codeExists: false, codeSize };
 
   const isEVault = await taggedRead("GenericFactory.isProxy", () => client.readContract({ address: deployment.eVaultFactory, abi: GenericFactoryAbi, functionName: "isProxy", args: [vault], blockNumber }) as Promise<boolean>);

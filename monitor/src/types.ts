@@ -165,6 +165,37 @@ export interface RiskNotApplicableMarket {
   borrow_cap: string;
 }
 
+export type RpcQualityClassification = "confirmed-no-code" | "rpc-disagreement" | "rpc-unavailable" | "unsupported-contract";
+
+export interface RpcQualityFinding {
+  chain_id: number;
+  address: Address | null;
+  phase: "endpoint-validation" | "canary" | "inventory-code" | "contract-classification";
+  classification: RpcQualityClassification;
+  resolved_by_fallback: boolean;
+  block_number: string | null;
+  code_endpoints: number[];
+  empty_code_endpoints: number[];
+  error_endpoints: number[];
+  detail: string;
+}
+
+export interface RpcChainQuality {
+  chain_id: number;
+  configured_endpoints: number;
+  healthy_endpoints: number;
+  quarantined_endpoints: number;
+  confirmed_no_code_markets: number;
+  rpc_disagreement_markets: number;
+  rpc_unavailable_events: number;
+  unsupported_contracts: number;
+}
+
+export interface RpcQualityReport {
+  chains: RpcChainQuality[];
+  findings: RpcQualityFinding[];
+}
+
 export interface LatestFeed {
   schema_version: 1;
   run_id: string;
@@ -192,6 +223,7 @@ export interface LatestFeed {
     unresolved: number;
   };
   coverage: ChainCoverage[];
+  rpc_quality: RpcQualityReport;
   risk_not_applicable_markets: RiskNotApplicableMarket[];
   issues: CoverageIssue[];
   markets: MarketSnapshot[];
