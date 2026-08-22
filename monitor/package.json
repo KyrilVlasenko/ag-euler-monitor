@@ -1,0 +1,22 @@
+{
+  "name": "alphagrowth-euler-utilization-monitor",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "monitor": "node --import tsx src/index.ts",
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate:workflow": "node --import tsx scripts/validate-workflow.ts",
+    "audit:public": "node --import tsx src/audit-public-output.ts"
+  },
+  "dependencies": {
+    "viem": "2.55.19"
+  },
+  "devDependencies": {
+    "@types/node": "26.2.0",
+    "tsx": "4.23.12",
+    "typescript": "7.0.2",
+    "yaml": "2.8.1"
+  }
+}

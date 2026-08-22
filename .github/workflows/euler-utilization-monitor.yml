@@ -1,0 +1,201 @@
+name: Euler Vault Utilization Monitor
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run completely without mutating production state"
+        required: false
+        default: true
+        type: boolean
+      test_threshold_pct:
+        description: "Optional isolated fixed threshold, for example 80"
+        required: false
+        default: ""
+        type: string
+      repeat_while_above:
+        description: "TEST ONLY: emit for every eligible market above the test threshold"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: euler-utilization-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RPC_URLS_JSON: ${{ secrets.RPC_URLS_JSON }}
+      MIN_DEPOSITS_USD: "20000"
+      THRESHOLD_OFFSET_PP: "2"
+      DEGRADED_RUNS_BEFORE_ALERT: "2"
+      MATERIAL_UTIL_JUMP_PP: "2"
+      LARGE_EVENT_USD_MIN: "50000"
+      LARGE_EVENT_DEPOSITS_PCT: "2"
+      STATE_INPUT_PATH: runtime/previous-state.json
+      STATE_OUTPUT_PATH: runtime/state.json
+      LATEST_OUTPUT_PATH: runtime/latest.json
+      NOTIFICATIONS_OUTPUT_PATH: runtime/notifications.json
+      TEST_NOTIFICATIONS_OUTPUT_PATH: runtime/notifications-test.json
+      SUMMARY_OUTPUT_PATH: runtime/summary.md
+
+    steps:
+      - name: Check out monitor code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: monitor/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: monitor
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Determine isolated or production mode
+        id: mode
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_TEST_THRESHOLD: ${{ inputs.test_threshold_pct }}
+          INPUT_REPEAT_WHILE_ABOVE: ${{ inputs.repeat_while_above }}
+        run: |
+          dry_run=false
+          test_threshold=""
+          repeat_while_above=false
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            dry_run="${INPUT_DRY_RUN:-true}"
+            test_threshold="$INPUT_TEST_THRESHOLD"
+            repeat_while_above="${INPUT_REPEAT_WHILE_ABOVE:-false}"
+          fi
+          persist=false
+          if [[ "$dry_run" == "false" && -z "$test_threshold" ]]; then
+            persist=true
+          fi
+          echo "dry_run=$dry_run" >> "$GITHUB_OUTPUT"
+          echo "test_threshold=$test_threshold" >> "$GITHUB_OUTPUT"
+          echo "repeat_while_above=$repeat_while_above" >> "$GITHUB_OUTPUT"
+          echo "persist=$persist" >> "$GITHUB_OUTPUT"
+
+      - name: Load previous persistent state
+        shell: bash
+        run: |
+          mkdir -p monitor/runtime
+          git fetch origin monitor-state:refs/remotes/origin/monitor-state || true
+          if git show refs/remotes/origin/monitor-state:state.json > monitor/runtime/previous-state.json 2>/dev/null; then
+            echo "Loaded state from monitor-state."
+          else
+            echo '{"schema_version":1,"updated_at":"1970-01-01T00:00:00.000Z","markets":{},"health":{"consecutive_degraded_runs":0,"degraded_alert_active":false,"last_degraded_at":null,"last_restored_at":null,"last_issues":[]}}' > monitor/runtime/previous-state.json
+            echo "No prior state found; using an empty baseline."
+          fi
+
+      - name: Run collector
+        id: collector
+        working-directory: monitor
+        shell: bash
+        env:
+          DRY_RUN: ${{ steps.mode.outputs.dry_run }}
+          TEST_THRESHOLD_PCT: ${{ steps.mode.outputs.test_threshold }}
+          REPEAT_WHILE_ABOVE: ${{ steps.mode.outputs.repeat_while_above }}
+        run: |
+          set +e
+          npm run monitor
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Audit generated public files
+        id: public_audit
+        if: always()
+        working-directory: monitor
+        shell: bash
+        run: |
+          files=(runtime/state.json runtime/latest.json runtime/summary.md)
+          if [[ -f runtime/notifications.json ]]; then files+=(runtime/notifications.json); fi
+          if [[ -f runtime/notifications-test.json ]]; then files+=(runtime/notifications-test.json); fi
+          npm run audit:public -- "${files[@]}"
+
+      - name: Add GitHub job summary
+        if: ${{ always() && steps.public_audit.outcome == 'success' }}
+        shell: bash
+        run: |
+          if [[ -f monitor/runtime/summary.md ]]; then
+            sed -n '1,500p' monitor/runtime/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Collector produced no summary." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload run files
+        if: ${{ always() && steps.public_audit.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: euler-monitor-${{ github.run_id }}
+          path: |
+            monitor/runtime/state.json
+            monitor/runtime/latest.json
+            monitor/runtime/notifications.json
+            monitor/runtime/notifications-test.json
+            monitor/runtime/summary.md
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Persist sanitized production outputs
+        if: ${{ always() && steps.mode.outputs.persist == 'true' && steps.public_audit.outcome == 'success' }}
+        shell: bash
+        run: |
+          for file in state.json latest.json notifications.json summary.md; do
+            test -f "monitor/runtime/$file" || { echo "Missing $file; refusing state mutation."; exit 1; }
+          done
+          state_parent=$(mktemp -d)
+          state_worktree="$state_parent/worktree"
+          git fetch origin monitor-state:refs/remotes/origin/monitor-state || true
+          if git show-ref --verify --quiet refs/remotes/origin/monitor-state; then
+            git worktree add -B monitor-state "$state_worktree" refs/remotes/origin/monitor-state
+          else
+            git worktree add --detach "$state_worktree"
+            git -C "$state_worktree" switch --orphan monitor-state
+            git -C "$state_worktree" rm -rf . || true
+            git -C "$state_worktree" clean -fdx
+          fi
+          if jq -e '.production_state_safe == true' monitor/runtime/latest.json >/dev/null; then
+            cp monitor/runtime/state.json "$state_worktree/state.json"
+          else
+            echo "Persistent state was invalid; preserving the existing state.json unchanged."
+          fi
+          cp monitor/runtime/latest.json "$state_worktree/latest.json"
+          cp monitor/runtime/notifications.json "$state_worktree/notifications.json"
+          cp monitor/runtime/summary.md "$state_worktree/summary.md"
+          npm --prefix monitor run audit:public -- "$state_worktree/state.json" "$state_worktree/latest.json" "$state_worktree/notifications.json" "$state_worktree/summary.md"
+          git -C "$state_worktree" config user.name "euler-monitor[bot]"
+          git -C "$state_worktree" config user.email "euler-monitor[bot]@users.noreply.github.com"
+          git -C "$state_worktree" add state.json latest.json notifications.json summary.md
+          if git -C "$state_worktree" diff --cached --quiet; then
+            echo "Persistent output is unchanged."
+          else
+            git -C "$state_worktree" commit -m "monitor: snapshot $GITHUB_RUN_ID"
+            git -C "$state_worktree" push origin HEAD:monitor-state
+          fi
+
+      - name: Surface collector coverage failure
+        if: always()
+        shell: bash
+        env:
+          COLLECTOR_EXIT_CODE: ${{ steps.collector.outputs.exit_code }}
+        run: |
+          if [[ -n "$COLLECTOR_EXIT_CODE" && "$COLLECTOR_EXIT_CODE" != "0" ]]; then
+            echo "Collector exited with code $COLLECTOR_EXIT_CODE after outputs were preserved."
+            exit "$COLLECTOR_EXIT_CODE"
+          fi

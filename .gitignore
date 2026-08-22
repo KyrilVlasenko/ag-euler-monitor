@@ -1,0 +1,4 @@
+monitor/node_modules/
+monitor/runtime/
+*.log
+.DS_Store
