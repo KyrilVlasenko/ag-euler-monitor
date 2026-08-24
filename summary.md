@@ -1,4 +1,4 @@
-# Euler monitor — 2026-08-24T05:55:14.032Z
+# Euler monitor — 2026-08-24T07:30:22.993Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -45,11 +45,7 @@
 
 ## Would-be/new notifications
 
-🚨 USD₮0 / Unichain — util 92.1% (was 91.9%), kink 90.0%, threshold 92.0%
-
-Cause: Withdrawal: $185 withdrawn; liquidity is now $5.8k.
-Confidence: High
-
-Liquidity left: $5.8k | Borrow APY: 11.3% → 12.1%
-Links: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain https://uniscan.xyz/tx/0x60f42693c337cfb7c059f743b315b3d4dca470f73dcbabb23135e4ab5a412918
+✅ USD₮0 / Unichain — RECOVERED: util 91.8% (was 92.1%), below threshold 92.0%.
+Liquidity available: $6.0k | Borrow APY: 11.2%
+Links: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain
 
