@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "32723465428",
-  "generated_at": "2026-08-24T11:45:27.736Z",
-  "collector_completed_at": "2026-08-24T11:45:56.263Z",
-  "health": "healthy",
-  "notifications": []
+  "run_id": "32731598008",
+  "generated_at": "2026-08-24T13:15:33.535Z",
+  "collector_completed_at": "2026-08-24T13:15:58.461Z",
+  "health": "degraded",
+  "notifications": [
+    {
+      "event_id": "euler-risk_alert-204e65f71ac9fff42dd90440",
+      "type": "risk_alert",
+      "chain_id": 1,
+      "vault": "0x2a356443fee07703266066c6bb1b11b82d8246ad",
+      "created_at": "2026-08-24T13:15:33.535Z",
+      "message": "🚨 USDC / Ethereum — util 95.3% (was 90.5%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +4.7pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $25.0k | Borrow APY: 8.7% → 20.6%\nLinks: https://app.euler.finance/vault/0x2a356443fee07703266066c6bb1b11b82d8246ad?network=ethereum"
+    }
+  ]
 }
