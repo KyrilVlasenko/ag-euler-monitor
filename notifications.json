@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "32807473083",
-  "generated_at": "2026-08-25T04:03:30.264Z",
-  "collector_completed_at": "2026-08-25T04:03:54.684Z",
+  "run_id": "32810817518",
+  "generated_at": "2026-08-25T04:55:51.827Z",
+  "collector_completed_at": "2026-08-25T04:56:12.359Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-risk_alert-b53ad94d4446deebc159efaf",
-      "type": "risk_alert",
-      "chain_id": 130,
-      "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
-      "created_at": "2026-08-25T04:03:30.264Z",
-      "message": "🚨 USD₮0 / Unichain — util 92.0% (was 92.0%), kink 90.0%, threshold 92.0%\n\nCause: Withdrawal: $49 withdrawn; liquidity is now $5.8k.\nConfidence: High\n\nLiquidity left: $5.8k | Borrow APY: 11.5% → 11.7%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain https://uniscan.xyz/tx/0x9c788823fc0727ea04b7246824239b552b8043e3e33b6961742906457261bd8d"
-    }
-  ]
+  "notifications": []
 }
