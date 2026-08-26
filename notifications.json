@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "32921079568",
-  "generated_at": "2026-08-26T02:00:27.122Z",
-  "collector_completed_at": "2026-08-26T02:00:48.036Z",
-  "health": "healthy",
+  "run_id": "32926451466",
+  "generated_at": "2026-08-26T03:26:50.130Z",
+  "collector_completed_at": "2026-08-26T03:27:26.888Z",
+  "health": "degraded",
   "notifications": []
 }
