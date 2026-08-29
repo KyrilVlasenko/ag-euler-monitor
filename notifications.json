@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "33244739450",
-  "generated_at": "2026-08-29T09:07:39.145Z",
-  "collector_completed_at": "2026-08-29T09:08:06.291Z",
-  "health": "degraded",
-  "notifications": [
-    {
-      "event_id": "euler-risk_alert-163cc16d951ef8dd09b81cc1",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-08-29T09:07:39.145Z",
-      "message": "🚨 USDC / Base — util 92.9% (was 91.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +1.9pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $14.5k | Borrow APY: 9.2% → 15.0%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
-    }
-  ]
+  "run_id": "33257772671",
+  "generated_at": "2026-08-29T14:30:38.086Z",
+  "collector_completed_at": "2026-08-29T14:31:07.084Z",
+  "health": "healthy",
+  "notifications": []
 }
