@@ -1,25 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "33312795347",
-  "generated_at": "2026-08-30T12:56:05.714Z",
-  "collector_completed_at": "2026-08-30T12:56:44.739Z",
-  "health": "degraded",
+  "run_id": "33325503975",
+  "generated_at": "2026-08-30T17:31:58.549Z",
+  "collector_completed_at": "2026-08-30T17:32:30.904Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-56649306d45a3f3999121dee",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-81cebb90cec338d6133afe9d",
+      "type": "recovery",
       "chain_id": 8453,
       "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
-      "created_at": "2026-08-30T12:56:05.714Z",
-      "message": "🚨 USDC / Base — util 97.8% (was 86.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +11.7pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $1.5k | Borrow APY: 9.5% → 88.7%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
-    },
-    {
-      "event_id": "euler-risk_alert-074366efc62d61c7c75e2be9",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e",
-      "created_at": "2026-08-30T12:56:05.714Z",
-      "message": "🚨 USDC / Base — util 97.7% (was 92.7%), kink 95.0%, threshold 97.0%\n\nCause: Unknown: utilization changed +5.0pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $10.4k | Borrow APY: 11.5% → 52.7%\nLinks: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base"
+      "created_at": "2026-08-30T17:31:58.549Z",
+      "message": "✅ USDC / Base — RECOVERED: util 78.4% (was 97.8%), below threshold 92.0%.\nLiquidity available: $18.0k | Borrow APY: 8.7%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
     }
   ]
 }
