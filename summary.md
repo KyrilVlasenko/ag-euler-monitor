@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-02T18:45:30.578Z
+# Euler monitor — 2026-09-02T21:51:22.261Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -6,14 +6,14 @@
 - Eligibility unresolved: 0
 - Deposit ineligible: 26
 - Deposit eligible: 32
-- Fully monitored: 25
-- Monitoring unresolved: 7
-- Total unresolved: 7
-- Coverage: degraded
+- Fully monitored: 32
+- Monitoring unresolved: 0
+- Total unresolved: 0
+- Coverage: healthy
 - Notifications generated: 0
 - Feed output: notifications.json
 
-- Chain 1: 0/7 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 7; total unresolved 7
+- Chain 1: 7/7 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 8/8 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 1/1 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -21,12 +21,11 @@
 - Chain 59144: 3/3 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
 ## RPC quality
-- Chain 1: endpoints 1/2 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
+- Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 1 0x29a56a1b8214d9cf7c5561811750d5cbdb45cc8e: rpc-unavailable; phase canary; fallback resolved true; block 25891475; code endpoints []; empty endpoints []; error endpoints [2]; endpoint 2 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -43,12 +42,3 @@
 - 8453 0xd54d33da9c326aee7513cefdeda5c93a41809cad: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
-
-## Coverage issues
-- 1 0x05e09415398659b19c5aef202289270b37f1fb31 [irm] live IRM read failed: HttpRequestError
-- 1 0x49d9fd20f1d61648fa9434a8c0c33174f5614eb8 [irm] live IRM read failed: HttpRequestError
-- 1 0x2a356443fee07703266066c6bb1b11b82d8246ad [irm] live IRM read failed: HttpRequestError
-- 1 0x3573a84bee11d49a1cbce2b291538de7a7dd81c6 [irm] live IRM read failed: HttpRequestError
-- 1 0x2f849ba554c1ea2ede9c240bbe9d247dd6ec8a6b [irm] live IRM read failed: HttpRequestError
-- 1 0xf81b08cb4669049049b9c2a38c7d27d480655bb3 [irm] live IRM read failed: HttpRequestError
-- 1 0x2ff5f1ca35f5100226ac58e1bfe5aac56919443b [irm] live IRM read failed: HttpRequestError
