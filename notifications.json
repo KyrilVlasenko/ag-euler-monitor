@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "34412898780",
-  "generated_at": "2026-09-09T22:34:48.814Z",
-  "collector_completed_at": "2026-09-09T22:35:08.607Z",
+  "run_id": "34424088146",
+  "generated_at": "2026-09-10T01:06:15.081Z",
+  "collector_completed_at": "2026-09-10T01:06:41.961Z",
   "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-monitor_degraded-67d3d4a0e3d689ab82129c13",
-      "type": "monitor_degraded",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-09-09T22:34:48.814Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Ethereum\nAffected markets: 0x2f849ba554c1ea2ede9c240bbe9d247dd6ec8a6b, 0x3573a84bee11d49a1cbce2b291538de7a7dd81c6, 0x2a356443fee07703266066c6bb1b11b82d8246ad, 0x49d9fd20f1d61648fa9434a8c0c33174f5614eb8, 0x05e09415398659b19c5aef202289270b37f1fb31, 0x2ff5f1ca35f5100226ac58e1bfe5aac56919443b\nFailed source: irm\nReason: live IRM read failed: HttpRequestError"
+      "event_id": "euler-recovery-8472ea56164a5c112e291563",
+      "type": "recovery",
+      "chain_id": 8453,
+      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
+      "created_at": "2026-09-10T01:06:15.081Z",
+      "message": "✅ USDC / Base — RECOVERED: util 86.4% (was 93.1%), below threshold 92.0%.\nLiquidity available: $32.4k | Borrow APY: 5.8%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
     }
   ]
 }
