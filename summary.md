@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-10T19:43:53.655Z
+# Euler monitor — 2026-09-10T22:36:57.677Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -10,7 +10,7 @@
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
-- Notifications generated: 0
+- Notifications generated: 1
 - Feed output: notifications.json
 
 - Chain 1: 7/7 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -42,3 +42,14 @@
 - 8453 0xd54d33da9c326aee7513cefdeda5c93a41809cad: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
+
+## Would-be/new notifications
+
+🚨 USDC / Base — util 92.2% (was 91.7%), kink 90.0%, threshold 92.0%
+
+Cause: Withdrawal: $4.1k withdrawn; liquidity is now $17.4k.
+Confidence: High
+
+Liquidity left: $17.4k | Borrow APY: 11.2% → 12.7%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0xcfa7a6b843678c3fc904e639e72f333369287360e502233e29f0ec9b7b5a7be8
+
