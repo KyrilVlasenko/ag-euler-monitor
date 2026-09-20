@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "35510541735",
-  "generated_at": "2026-09-20T12:25:08.080Z",
-  "collector_completed_at": "2026-09-20T12:25:36.436Z",
+  "run_id": "35523936374",
+  "generated_at": "2026-09-20T16:50:08.308Z",
+  "collector_completed_at": "2026-09-20T16:50:37.948Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-risk_alert-8b3d38305c25f0bc26730044",
-      "type": "risk_alert",
-      "chain_id": 1,
-      "vault": "0x3573a84bee11d49a1cbce2b291538de7a7dd81c6",
-      "created_at": "2026-09-20T12:25:08.080Z",
-      "message": "🚨 USDC / Ethereum — util 100.0% (was 31.4%), kink 90.0%, threshold 92.0%\n\nCause: Withdrawal: $50.9k withdrawn; liquidity is now $0.\nConfidence: High\n\nLiquidity left: $0 | Borrow APY: 2.6% → 22.1%\nLinks: https://app.euler.finance/vault/0x3573a84bee11d49a1cbce2b291538de7a7dd81c6?network=ethereum https://etherscan.io/tx/0x114cfb3850497ad283c08627441148bfdb8f44f612dd9b4607479f2761086b48"
-    }
-  ]
+  "notifications": []
 }
