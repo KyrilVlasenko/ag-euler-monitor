@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-20T22:28:35.678Z
+# Euler monitor — 2026-09-21T01:09:18.349Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -10,7 +10,7 @@
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
-- Notifications generated: 0
+- Notifications generated: 1
 - Feed output: notifications.json
 
 - Chain 1: 7/7 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -23,9 +23,10 @@
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
+- Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
+- Chain 143 chain endpoint: rpc-unavailable; phase endpoint-validation; fallback resolved true; block unavailable; code endpoints []; empty endpoints []; error endpoints [4]; endpoint 4 failed chain ID or block-number validation
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -42,3 +43,14 @@
 - 8453 0xd54d33da9c326aee7513cefdeda5c93a41809cad: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
+
+## Would-be/new notifications
+
+🚨 USDC / Base — util 100.0% (was 96.2%), kink 95.0%, threshold 97.0%
+
+Cause: Withdrawal: $18.3k withdrawn; liquidity is now $0.
+Confidence: High
+
+Liquidity left: $0 | Borrow APY: 28.6% → 100.0%
+Links: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base https://basescan.org/tx/0x876408ac9e0d74c0ab84dab617246dc66b56dea5549071acfb072aa59fcd23c8
+
