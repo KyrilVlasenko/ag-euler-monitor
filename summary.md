@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-24T15:09:30.094Z
+# Euler monitor — 2026-09-24T19:13:00.510Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -22,11 +22,10 @@
 
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130: endpoints 2/3 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
+- Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0xbad8b5bdfb2bcbcd78cc9f1573d3aad6e865e752: rpc-unavailable; phase canary; fallback resolved true; block 59514196; code endpoints []; empty endpoints []; error endpoints [1]; endpoint 1 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
