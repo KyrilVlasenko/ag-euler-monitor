@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-25T01:33:13.245Z
+# Euler monitor — 2026-09-25T07:52:32.065Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0x54ff502df96cd9b9585094eacd86aafce902d06a: rpc-unavailable; phase inventory-code; fallback resolved true; block 59551616; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
+- Chain 130 0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc: rpc-unavailable; phase inventory-code; fallback resolved true; block 59574379; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
