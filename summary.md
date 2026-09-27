@@ -1,19 +1,19 @@
-# Euler monitor — 2026-09-27T14:03:11.415Z
+# Euler monitor — 2026-09-27T18:27:07.656Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
 - Risk not applicable: 14
 - Eligibility unresolved: 0
-- Deposit ineligible: 27
-- Deposit eligible: 31
-- Fully monitored: 31
+- Deposit ineligible: 28
+- Deposit eligible: 30
+- Fully monitored: 30
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
 - Notifications generated: 0
 - Feed output: notifications.json
 
-- Chain 1: 6/6 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 8/8 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 1/1 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc: rpc-unavailable; phase inventory-code; fallback resolved true; block 59769418; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
+- Chain 130 0xd325a54926c937710daa1b46d1c6587155084a63: rpc-unavailable; phase inventory-code; fallback resolved true; block 59785256; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
