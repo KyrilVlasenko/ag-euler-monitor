@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-28T15:31:58.534Z
+# Euler monitor — 2026-09-28T22:04:10.379Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -6,26 +6,27 @@
 - Eligibility unresolved: 0
 - Deposit ineligible: 28
 - Deposit eligible: 30
-- Fully monitored: 29
-- Monitoring unresolved: 1
-- Total unresolved: 1
-- Coverage: degraded
-- Notifications generated: 3
+- Fully monitored: 30
+- Monitoring unresolved: 0
+- Total unresolved: 0
+- Coverage: healthy
+- Notifications generated: 2
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 8/8 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 1/1 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 12/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 1; total unresolved 1
+- Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 3/3 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
+- Chain 130: endpoints 2/3 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
+- Chain 130 0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba: rpc-unavailable; phase inventory-code; fallback resolved true; block 59884678; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -43,28 +44,13 @@
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
-## Coverage issues
-- 8453 0xeef57677c2fc1a930eed234e3545e750c88f6743 [events] event query failed: HttpRequestError
-
 ## Would-be/new notifications
 
-✅ USDC / Base — RECOVERED: util 86.9% (was 92.2%), below threshold 92.0%.
-Liquidity available: $34.4k | Borrow APY: 5.8%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
-
-
-🚨 USDC / Base — util 97.6% (was 87.1%), kink 90.0%, threshold 92.0%
-
-Cause: Unknown: utilization changed +10.5pp; missing vault event logs for the observation interval.
-Confidence: Low — Event logs unavailable
-
-Liquidity left: $1.9k | Borrow APY: 9.7% → 86.9%
+✅ USDC / Base — RECOVERED: util 84.9% (was 97.6%), below threshold 92.0%.
+Liquidity available: $14.1k | Borrow APY: 9.4%
 Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base
 
 
-MONITOR DEGRADED
-Affected chains: Base
-Affected markets: 0xeef57677c2fc1a930eed234e3545e750c88f6743
-Failed source: events
-Reason: event query failed: HttpRequestError
+MONITOR RESTORED
+Full required Euler market coverage is available again.
 
