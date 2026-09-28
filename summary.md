@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-28T06:58:18.006Z
+# Euler monitor — 2026-09-28T15:31:58.534Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -10,7 +10,7 @@
 - Monitoring unresolved: 1
 - Total unresolved: 1
 - Coverage: degraded
-- Notifications generated: 1
+- Notifications generated: 3
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -22,11 +22,10 @@
 
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130: endpoints 2/3 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
+- Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0xbad8b5bdfb2bcbcd78cc9f1573d3aad6e865e752: rpc-unavailable; phase canary; fallback resolved true; block 59830326; code endpoints []; empty endpoints []; error endpoints [1]; endpoint 1 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -45,15 +44,27 @@
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
 ## Coverage issues
-- 8453 0x0a1a3b5f2041f33522c4efc754a7d096f880ee16 [events] event query failed: HttpRequestError
+- 8453 0xeef57677c2fc1a930eed234e3545e750c88f6743 [events] event query failed: HttpRequestError
 
 ## Would-be/new notifications
 
-🚨 USDC / Base — util 92.2% (was 89.0%), kink 90.0%, threshold 92.0%
+✅ USDC / Base — RECOVERED: util 86.9% (was 92.2%), below threshold 92.0%.
+Liquidity available: $34.4k | Borrow APY: 5.8%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
 
-Cause: Unknown: utilization changed +3.1pp; missing vault event logs for the observation interval.
+
+🚨 USDC / Base — util 97.6% (was 87.1%), kink 90.0%, threshold 92.0%
+
+Cause: Unknown: utilization changed +10.5pp; missing vault event logs for the observation interval.
 Confidence: Low — Event logs unavailable
 
-Liquidity left: $19.7k | Borrow APY: 5.9% → 12.6%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
+Liquidity left: $1.9k | Borrow APY: 9.7% → 86.9%
+Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base
+
+
+MONITOR DEGRADED
+Affected chains: Base
+Affected markets: 0xeef57677c2fc1a930eed234e3545e750c88f6743
+Failed source: events
+Reason: event query failed: HttpRequestError
 

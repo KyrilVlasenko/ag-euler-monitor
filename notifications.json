@@ -1,17 +1,33 @@
 {
   "schema_version": 1,
-  "run_id": "36389110311",
-  "generated_at": "2026-09-28T06:58:18.006Z",
-  "collector_completed_at": "2026-09-28T06:58:51.952Z",
+  "run_id": "36444255311",
+  "generated_at": "2026-09-28T15:31:58.534Z",
+  "collector_completed_at": "2026-09-28T15:32:28.472Z",
   "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-761948dec8a1b8a8045ab746",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-569141f19eb209f10420090e",
+      "type": "recovery",
       "chain_id": 8453,
       "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-09-28T06:58:18.006Z",
-      "message": "🚨 USDC / Base — util 92.2% (was 89.0%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +3.1pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $19.7k | Borrow APY: 5.9% → 12.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+      "created_at": "2026-09-28T15:31:58.534Z",
+      "message": "✅ USDC / Base — RECOVERED: util 86.9% (was 92.2%), below threshold 92.0%.\nLiquidity available: $34.4k | Borrow APY: 5.8%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+    },
+    {
+      "event_id": "euler-risk_alert-9d8c6a3f1ad3048c3181c251",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
+      "created_at": "2026-09-28T15:31:58.534Z",
+      "message": "🚨 USDC / Base — util 97.6% (was 87.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +10.5pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $1.9k | Borrow APY: 9.7% → 86.9%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
+    },
+    {
+      "event_id": "euler-monitor_degraded-f437e583c4ff37716d9c5595",
+      "type": "monitor_degraded",
+      "chain_id": null,
+      "vault": null,
+      "created_at": "2026-09-28T15:31:58.534Z",
+      "message": "MONITOR DEGRADED\nAffected chains: Base\nAffected markets: 0xeef57677c2fc1a930eed234e3545e750c88f6743\nFailed source: events\nReason: event query failed: HttpRequestError"
     }
   ]
 }
