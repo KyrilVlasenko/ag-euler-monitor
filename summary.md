@@ -1,4 +1,4 @@
-# Euler monitor — 2026-09-30T23:53:14.694Z
+# Euler monitor — 2026-10-01T06:00:36.192Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -23,11 +23,10 @@
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 130: endpoints 2/3 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
-- Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
+- Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba: rpc-unavailable; phase inventory-code; fallback resolved true; block 60064022; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
-- Chain 143 chain endpoint: rpc-unavailable; phase endpoint-validation; fallback resolved true; block unavailable; code endpoints []; empty endpoints []; error endpoints [4]; endpoint 4 failed chain ID or block-number validation
+- Chain 130 0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc: rpc-unavailable; phase inventory-code; fallback resolved true; block 60086064; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
