@@ -1,12 +1,12 @@
-# Euler monitor — 2026-10-01T23:54:35.658Z
+# Euler monitor — 2026-10-02T05:42:34.823Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
 - Risk not applicable: 14
 - Eligibility unresolved: 0
-- Deposit ineligible: 28
-- Deposit eligible: 30
-- Fully monitored: 30
+- Deposit ineligible: 29
+- Deposit eligible: 29
+- Fully monitored: 29
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
@@ -14,7 +14,7 @@
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 130: 8/8 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 1/1 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -23,10 +23,9 @@
 ## RPC quality
 - Chain 1: endpoints 2/2 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 130: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
+- Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143 chain endpoint: rpc-unavailable; phase endpoint-validation; fallback resolved true; block unavailable; code endpoints []; empty endpoints []; error endpoints [4]; endpoint 4 failed chain ID or block-number validation
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -46,11 +45,7 @@
 
 ## Would-be/new notifications
 
-🚨 AUSD / Monad — util 95.2% (was 36.4%), kink 93.0%, threshold 95.0%
-
-Cause: Withdrawal: $42.6k withdrawn; liquidity is now $1.3k.
-Confidence: High
-
-Liquidity left: $1.3k | Borrow APY: 3.1% → 26.9%
-Links: https://app.euler.finance/vault/0x438cedce647491b1d93a73d491ec19a50194c222?network=monad https://monadscan.com/tx/0xfc678b02fb19a1e1df4bb9d8057f29c2efbc2b64ff257aee43727ab4eeb1cb64
+✅ AUSD / Monad — RECOVERED: util 33.7% (was 95.2%), below threshold 95.0%.
+Liquidity available: $17.5k | Borrow APY: 2.8%
+Links: https://app.euler.finance/vault/0x438cedce647491b1d93a73d491ec19a50194c222?network=monad
 

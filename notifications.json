@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "36943251428",
-  "generated_at": "2026-10-01T23:54:35.658Z",
-  "collector_completed_at": "2026-10-01T23:55:02.645Z",
+  "run_id": "36970132818",
+  "generated_at": "2026-10-02T05:42:34.823Z",
+  "collector_completed_at": "2026-10-02T05:42:57.303Z",
   "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-3da49578cfe462e16bd335c3",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-add33b91ebf6c52ef81232d0",
+      "type": "recovery",
       "chain_id": 143,
       "vault": "0x438cedce647491b1d93a73d491ec19a50194c222",
-      "created_at": "2026-10-01T23:54:35.658Z",
-      "message": "🚨 AUSD / Monad — util 95.2% (was 36.4%), kink 93.0%, threshold 95.0%\n\nCause: Withdrawal: $42.6k withdrawn; liquidity is now $1.3k.\nConfidence: High\n\nLiquidity left: $1.3k | Borrow APY: 3.1% → 26.9%\nLinks: https://app.euler.finance/vault/0x438cedce647491b1d93a73d491ec19a50194c222?network=monad https://monadscan.com/tx/0xfc678b02fb19a1e1df4bb9d8057f29c2efbc2b64ff257aee43727ab4eeb1cb64"
+      "created_at": "2026-10-02T05:42:34.823Z",
+      "message": "✅ AUSD / Monad — RECOVERED: util 33.7% (was 95.2%), below threshold 95.0%.\nLiquidity available: $17.5k | Borrow APY: 2.8%\nLinks: https://app.euler.finance/vault/0x438cedce647491b1d93a73d491ec19a50194c222?network=monad"
     }
   ]
 }
