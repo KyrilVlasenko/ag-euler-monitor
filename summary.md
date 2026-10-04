@@ -1,4 +1,4 @@
-# Euler monitor — 2026-10-03T21:20:00.919Z
+# Euler monitor — 2026-10-04T00:40:41.977Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 4/4 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 130 0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc: rpc-unavailable; phase inventory-code; fallback resolved true; block 60314028; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
+- Chain 130 0x1f3134c3f3f8add904b9635acbefc0ea0d0e1ffc: rpc-unavailable; phase inventory-code; fallback resolved true; block 60326068; code endpoints [2,3]; empty endpoints []; error endpoints [1]; an endpoint failed code verification; another validated endpoint returned contract code
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -46,11 +46,7 @@
 
 ## Would-be/new notifications
 
-🚨 USDC / Base — util 98.5% (was 75.2%), kink 90.0%, threshold 92.0%
-
-Cause: Withdrawal: $26.4k withdrawn; liquidity is now $1.3k.
-Confidence: High
-
-Liquidity left: $1.3k | Borrow APY: 8.3% → 97.9%
-Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base https://basescan.org/tx/0xdc7de77479ee71b8b781dd103d6b07d67ad5e69b5366898635ba3f7a9589d9d6
+✅ USDC / Base — RECOVERED: util 47.7% (was 98.5%), below threshold 92.0%.
+Liquidity available: $94.1k | Borrow APY: 5.2%
+Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base
 
