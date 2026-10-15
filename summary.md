@@ -1,12 +1,12 @@
-# Euler monitor — 2026-10-15T09:58:34.213Z
+# Euler monitor — 2026-10-15T15:04:25.706Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
 - Risk not applicable: 14
 - Eligibility unresolved: 0
-- Deposit ineligible: 31
-- Deposit eligible: 27
-- Fully monitored: 27
+- Deposit ineligible: 30
+- Deposit eligible: 28
+- Fully monitored: 28
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
@@ -16,7 +16,7 @@
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 8453: 14/14 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 2/2 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
