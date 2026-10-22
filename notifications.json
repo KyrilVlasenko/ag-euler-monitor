@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "39693073929",
-  "generated_at": "2026-10-21T23:23:29.864Z",
-  "collector_completed_at": "2026-10-21T23:23:58.544Z",
+  "run_id": "39724864624",
+  "generated_at": "2026-10-22T04:53:24.458Z",
+  "collector_completed_at": "2026-10-22T04:53:45.995Z",
   "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-6803250c4be954c42bfc6fb8",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-171ba2e4d9f391ab14a5230d",
+      "type": "recovery",
       "chain_id": 8453,
       "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-10-21T23:23:29.864Z",
-      "message": "🚨 USDC / Base — util 94.5% (was 70.3%), kink 90.0%, threshold 92.0%\n\nCause: Withdrawal: $94.3k withdrawn; liquidity is now $13.9k.\nConfidence: High\n\nLiquidity left: $13.9k | Borrow APY: 4.7% → 20.0%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0x227e915cf1d381b2f9de8c99d39b089234d3ec9e4d04a04dea1bf9349c8653c7"
+      "created_at": "2026-10-22T04:53:24.458Z",
+      "message": "✅ USDC / Base — RECOVERED: util 84.9% (was 94.5%), below threshold 92.0%.\nLiquidity available: $40.7k | Borrow APY: 5.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
     }
   ]
 }
