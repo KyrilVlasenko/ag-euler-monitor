@@ -1,4 +1,4 @@
-# Euler monitor — 2026-10-22T15:21:12.298Z
+# Euler monitor — 2026-10-22T20:09:42.335Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -10,7 +10,7 @@
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
-- Notifications generated: 2
+- Notifications generated: 1
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -46,16 +46,7 @@
 
 ## Would-be/new notifications
 
-✅ USDC / Base — RECOVERED: util 91.5% (was 92.3%), below threshold 92.0%.
-Liquidity available: $23.2k | Borrow APY: 10.6%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
-
-
-🚨 WETH / Base — util 93.5% (was 85.1%), kink 90.0%, threshold 92.0%
-
-Cause: New borrow: $27.6k borrowed; liquidity is now $21.0k.
-Confidence: High
-
-Liquidity left: $21.0k | Borrow APY: 2.3% → 24.9%
-Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base https://basescan.org/tx/0x3f60470cd4977ac0a2d1778d7f5c684494a9082d034ccacaa4de3ca886dc8a34
+✅ WETH / Base — RECOVERED: util 89.7% (was 93.5%), below threshold 92.0%.
+Liquidity available: $33.6k | Borrow APY: 2.4%
+Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base
 
