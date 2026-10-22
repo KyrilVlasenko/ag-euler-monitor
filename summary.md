@@ -1,12 +1,12 @@
-# Euler monitor — 2026-10-22T04:53:24.458Z
+# Euler monitor — 2026-10-22T10:14:36.593Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
 - Risk not applicable: 14
 - Eligibility unresolved: 0
-- Deposit ineligible: 30
-- Deposit eligible: 28
-- Fully monitored: 28
+- Deposit ineligible: 29
+- Deposit eligible: 29
+- Fully monitored: 29
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
@@ -16,7 +16,7 @@
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 14/14 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 8453: 15/15 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 2/2 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
@@ -46,7 +46,11 @@
 
 ## Would-be/new notifications
 
-✅ USDC / Base — RECOVERED: util 84.9% (was 94.5%), below threshold 92.0%.
-Liquidity available: $40.7k | Borrow APY: 5.6%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
+🚨 USDC / Base — util 92.3% (was 84.9%), kink 90.0%, threshold 92.0%
+
+Cause: New borrow: $20.0k borrowed; liquidity is now $20.8k.
+Confidence: High
+
+Liquidity left: $20.8k | Borrow APY: 5.6% → 12.9%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0x4b5d6a725bb2f19ce5d29aa909b4ad6374741e8c36c26d15ef234e1a7880702b
 
