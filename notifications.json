@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "40095053171",
-  "generated_at": "2026-10-24T12:42:47.096Z",
-  "collector_completed_at": "2026-10-24T12:43:10.372Z",
-  "health": "healthy",
-  "notifications": []
+  "run_id": "40112412711",
+  "generated_at": "2026-10-24T16:37:41.546Z",
+  "collector_completed_at": "2026-10-24T16:38:04.257Z",
+  "health": "degraded",
+  "notifications": [
+    {
+      "event_id": "euler-risk_alert-67433eeb9bf3ca839325f4bc",
+      "type": "risk_alert",
+      "chain_id": 130,
+      "vault": "0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba",
+      "created_at": "2026-10-24T16:37:41.546Z",
+      "message": "🚨 USDC / Unichain — util 96.1% (was 84.3%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +11.7pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $3.2k | Borrow APY: 5.1% → 25.2%\nLinks: https://app.euler.finance/vault/0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba?network=unichain"
+    }
+  ]
 }
