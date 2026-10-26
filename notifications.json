@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "40240918705",
-  "generated_at": "2026-10-25T22:35:45.753Z",
-  "collector_completed_at": "2026-10-25T22:36:09.858Z",
+  "run_id": "40253182445",
+  "generated_at": "2026-10-26T01:13:58.366Z",
+  "collector_completed_at": "2026-10-26T01:14:17.516Z",
   "health": "healthy",
-  "notifications": []
+  "notifications": [
+    {
+      "event_id": "euler-risk_alert-f0d8c2dca14086d291d64964",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
+      "created_at": "2026-10-26T01:13:58.366Z",
+      "message": "🚨 USDC / Base — util 93.1% (was 88.3%), kink 90.0%, threshold 92.0%\n\nCause: New borrow: $4.0k borrowed; liquidity is now $5.8k.\nConfidence: High\n\nLiquidity left: $5.8k | Borrow APY: 9.8% → 36.3%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base https://basescan.org/tx/0x4b1e9ff07b416e0e6111359054d5df7449cd44bdd4a48f209e84bc50564d4084"
+    }
+  ]
 }
