@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "40279327869",
-  "generated_at": "2026-10-26T06:21:35.987Z",
-  "collector_completed_at": "2026-10-26T06:21:59.185Z",
+  "run_id": "40338471519",
+  "generated_at": "2026-10-26T14:19:00.026Z",
+  "collector_completed_at": "2026-10-26T14:19:25.945Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-recovery-03819b6eda1d620bfb2c65e2",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
-      "created_at": "2026-10-26T06:21:35.987Z",
-      "message": "✅ USDC / Base — RECOVERED: util 87.1% (was 93.1%), below threshold 92.0%.\nLiquidity available: $11.1k | Borrow APY: 9.7%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
-    }
-  ]
+  "notifications": []
 }
