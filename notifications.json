@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "40426618513",
-  "generated_at": "2026-10-27T00:28:40.061Z",
-  "collector_completed_at": "2026-10-27T00:29:01.014Z",
+  "run_id": "40460424360",
+  "generated_at": "2026-10-27T06:19:51.991Z",
+  "collector_completed_at": "2026-10-27T06:20:18.996Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-recovery-768a6baf264642feee8840b9",
-      "type": "recovery",
-      "chain_id": 130,
-      "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
-      "created_at": "2026-10-27T00:28:40.061Z",
-      "message": "✅ USD₮0 / Unichain — RECOVERED: util 91.7% (was 92.2%), below threshold 92.0%.\nLiquidity available: $5.9k | Borrow APY: 10.7%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
-    }
-  ]
+  "notifications": []
 }
