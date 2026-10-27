@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "40562845815",
-  "generated_at": "2026-10-27T18:45:24.368Z",
-  "collector_completed_at": "2026-10-27T18:45:51.881Z",
-  "health": "healthy",
-  "notifications": []
+  "run_id": "40598723662",
+  "generated_at": "2026-10-27T22:58:09.232Z",
+  "collector_completed_at": "2026-10-27T22:58:28.887Z",
+  "health": "degraded",
+  "notifications": [
+    {
+      "event_id": "euler-risk_alert-fa1e4eeef4fdb04d82eaf837",
+      "type": "risk_alert",
+      "chain_id": 130,
+      "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
+      "created_at": "2026-10-27T22:58:09.232Z",
+      "message": "🚨 USD₮0 / Unichain — util 92.1% (was 91.7%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +0.3pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $5.6k | Borrow APY: 10.8% → 11.9%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
+    }
+  ]
 }
