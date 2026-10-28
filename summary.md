@@ -1,22 +1,22 @@
-# Euler monitor — 2026-10-27T22:58:09.232Z
+# Euler monitor — 2026-10-28T02:19:21.682Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
 - Risk not applicable: 14
 - Eligibility unresolved: 0
-- Deposit ineligible: 30
-- Deposit eligible: 28
-- Fully monitored: 27
-- Monitoring unresolved: 1
-- Total unresolved: 1
-- Coverage: degraded
-- Notifications generated: 1
+- Deposit ineligible: 29
+- Deposit eligible: 29
+- Fully monitored: 29
+- Monitoring unresolved: 0
+- Total unresolved: 0
+- Coverage: healthy
+- Notifications generated: 2
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 130: 6/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 1; total unresolved 1
+- Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 14/14 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 8453: 15/15 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 2/2 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
@@ -44,16 +44,18 @@
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
-## Coverage issues
-- 130 0xd49181c522ecdb265f0d9c175cf26fface64ead3 [events] event query failed: HttpRequestError
-
 ## Would-be/new notifications
 
-🚨 USD₮0 / Unichain — util 92.1% (was 91.7%), kink 90.0%, threshold 92.0%
-
-Cause: Unknown: utilization changed +0.3pp; missing vault event logs for the observation interval.
-Confidence: Low — Event logs unavailable
-
-Liquidity left: $5.6k | Borrow APY: 10.8% → 11.9%
+✅ USD₮0 / Unichain — RECOVERED: util 92.0% (was 92.1%), below threshold 92.0%.
+Liquidity available: $5.7k | Borrow APY: 11.6%
 Links: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain
+
+
+🚨 USDC / Base — util 100.0% (was 91.8%), kink 95.0%, threshold 97.0%
+
+Cause: Withdrawal: $49.2k withdrawn; liquidity is now $0.
+Confidence: High
+
+Liquidity left: $0 | Borrow APY: 10.1% → 100.0%
+Links: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base https://basescan.org/tx/0x3535377fd2e30a8fb118befc62027d0d8c7a8a33690279044f25105c721559c3
 

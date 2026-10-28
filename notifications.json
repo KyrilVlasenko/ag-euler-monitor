@@ -1,17 +1,25 @@
 {
   "schema_version": 1,
-  "run_id": "40598723662",
-  "generated_at": "2026-10-27T22:58:09.232Z",
-  "collector_completed_at": "2026-10-27T22:58:28.887Z",
-  "health": "degraded",
+  "run_id": "40620207682",
+  "generated_at": "2026-10-28T02:19:21.682Z",
+  "collector_completed_at": "2026-10-28T02:19:55.363Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-fa1e4eeef4fdb04d82eaf837",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-76af2cc087fc72afee318c9c",
+      "type": "recovery",
       "chain_id": 130,
       "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
-      "created_at": "2026-10-27T22:58:09.232Z",
-      "message": "🚨 USD₮0 / Unichain — util 92.1% (was 91.7%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +0.3pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $5.6k | Borrow APY: 10.8% → 11.9%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
+      "created_at": "2026-10-28T02:19:21.682Z",
+      "message": "✅ USD₮0 / Unichain — RECOVERED: util 92.0% (was 92.1%), below threshold 92.0%.\nLiquidity available: $5.7k | Borrow APY: 11.6%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
+    },
+    {
+      "event_id": "euler-risk_alert-bd539c2c8473b9795c867108",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e",
+      "created_at": "2026-10-28T02:19:21.682Z",
+      "message": "🚨 USDC / Base — util 100.0% (was 91.8%), kink 95.0%, threshold 97.0%\n\nCause: Withdrawal: $49.2k withdrawn; liquidity is now $0.\nConfidence: High\n\nLiquidity left: $0 | Borrow APY: 10.1% → 100.0%\nLinks: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base https://basescan.org/tx/0x3535377fd2e30a8fb118befc62027d0d8c7a8a33690279044f25105c721559c3"
     }
   ]
 }
