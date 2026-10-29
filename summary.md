@@ -1,22 +1,22 @@
-# Euler monitor — 2026-10-28T21:40:47.492Z
+# Euler monitor — 2026-10-29T01:49:36.339Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
-- Risk not applicable: 14
-- Eligibility unresolved: 0
-- Deposit ineligible: 30
-- Deposit eligible: 28
-- Fully monitored: 28
+- Risk not applicable: 13
+- Eligibility unresolved: 1
+- Deposit ineligible: 31
+- Deposit eligible: 27
+- Fully monitored: 27
 - Monitoring unresolved: 0
-- Total unresolved: 0
-- Coverage: healthy
-- Notifications generated: 0
+- Total unresolved: 1
+- Coverage: degraded
+- Notifications generated: 2
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 14/14 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 143: 0/0 eligible markets monitored; risk not applicable 6; eligibility unresolved 1; monitoring unresolved 0; total unresolved 1
+- Chain 8453: 13/13 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 2/2 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
@@ -35,7 +35,6 @@
 - 143 0x7a81a1613d50fff334027aad76f2416368f6050f: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 143 0x7ad9f09b431a4c5f4cba809d449fde842192f9ec: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 143 0xc4fabe0b5a280163ab47e3162689a278c81df3f9: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
-- 143 0xf18f3bc9440ad7940e6e2a86fd0c724add2dd0aa: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 143 0xf3e55a17c4c59cb70ea44973795fa8f3c3baad72: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0x24d633664aea3f551b2fa34fa66dd1ba52a33933: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0x2645cbaf62f2f336b0e988375d7e6bcab66a296c: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -43,3 +42,22 @@
 - 8453 0xd54d33da9c326aee7513cefdeda5c93a41809cad: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
+
+## Coverage issues
+- 143 0xf18f3bc9440ad7940e6e2a86fd0c724add2dd0aa [rpc] deposit-stage RPC read failed: InvalidInputRpcError
+
+## Would-be/new notifications
+
+🚨 WETH / Base — util 93.1% (was 82.6%), kink 90.0%, threshold 92.0%
+
+Cause: New borrow: $87.8k borrowed; liquidity is now $21.4k.
+Confidence: High
+
+Liquidity left: $21.4k | Borrow APY: 2.2% → 22.3%
+Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base https://basescan.org/tx/0x47f88d335b5a4049b267da77efed756c7fe7512c9d8ed4621cdf48d61118101f
+
+
+✅ USDC / Base — RECOVERED: util 86.6% (was 95.1%), below threshold 92.0%.
+Liquidity available: $41.1k | Borrow APY: 10.1%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
+
