@@ -1,25 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "40802711544",
-  "generated_at": "2026-10-29T01:49:36.339Z",
-  "collector_completed_at": "2026-10-29T01:49:57.127Z",
-  "health": "degraded",
-  "notifications": [
-    {
-      "event_id": "euler-risk_alert-b066cfaf9f9b7c7a1baf1d87",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
-      "created_at": "2026-10-29T01:49:36.339Z",
-      "message": "🚨 WETH / Base — util 93.1% (was 82.6%), kink 90.0%, threshold 92.0%\n\nCause: New borrow: $87.8k borrowed; liquidity is now $21.4k.\nConfidence: High\n\nLiquidity left: $21.4k | Borrow APY: 2.2% → 22.3%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base https://basescan.org/tx/0x47f88d335b5a4049b267da77efed756c7fe7512c9d8ed4621cdf48d61118101f"
-    },
-    {
-      "event_id": "euler-recovery-56836f6ac2120a5ff65bac4e",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-10-29T01:49:36.339Z",
-      "message": "✅ USDC / Base — RECOVERED: util 86.6% (was 95.1%), below threshold 92.0%.\nLiquidity available: $41.1k | Borrow APY: 10.1%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
-    }
-  ]
+  "run_id": "40842924544",
+  "generated_at": "2026-10-29T08:33:11.468Z",
+  "collector_completed_at": "2026-10-29T08:33:28.086Z",
+  "health": "healthy",
+  "notifications": []
 }
