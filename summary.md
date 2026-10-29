@@ -1,4 +1,4 @@
-# Euler monitor — 2026-10-29T16:10:51.893Z
+# Euler monitor — 2026-10-29T21:10:10.612Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -6,15 +6,15 @@
 - Eligibility unresolved: 0
 - Deposit ineligible: 32
 - Deposit eligible: 26
-- Fully monitored: 26
-- Monitoring unresolved: 0
-- Total unresolved: 0
-- Coverage: healthy
-- Notifications generated: 3
+- Fully monitored: 25
+- Monitoring unresolved: 1
+- Total unresolved: 1
+- Coverage: degraded
+- Notifications generated: 1
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 130: 7/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 130: 6/7 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 1; total unresolved 1
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 8453: 12/12 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -44,23 +44,16 @@
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
+## Coverage issues
+- 130 0xd49181c522ecdb265f0d9c175cf26fface64ead3 [events] event query failed: HttpRequestError
+
 ## Would-be/new notifications
 
-✅ WETH / Base — RECOVERED: util 82.5% (was 92.1%), below threshold 92.0%.
-Liquidity available: $57.0k | Borrow APY: 2.2%
-Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base
+🚨 USD₮0 / Unichain — util 92.4% (was 91.9%), kink 90.0%, threshold 92.0%
 
+Cause: Unknown: utilization changed +0.6pp; missing vault event logs for the observation interval.
+Confidence: Low — Event logs unavailable
 
-✅ USD₮0 / Unichain — RECOVERED: util 91.9% (was 92.0%), below threshold 92.0%.
-Liquidity available: $5.8k | Borrow APY: 11.2%
+Liquidity left: $5.4k | Borrow APY: 11.2% → 13.0%
 Links: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain
-
-
-🚨 USDC / Base — util 97.8% (was 83.4%), kink 90.0%, threshold 92.0%
-
-Cause: Combination: $70.0k new borrow plus $34.0k withdrawal.
-Confidence: High
-
-Liquidity left: $7.0k | Borrow APY: 9.7% → 34.2%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0xd9affc2f8b6d3a7da76dc83046dd382bc8841c84224af583a06524fc956e6249
 
