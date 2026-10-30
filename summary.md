@@ -1,4 +1,4 @@
-# Euler monitor — 2026-10-30T01:03:50.065Z
+# Euler monitor — 2026-10-30T07:11:26.085Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -10,7 +10,7 @@
 - Monitoring unresolved: 0
 - Total unresolved: 0
 - Coverage: healthy
-- Notifications generated: 1
+- Notifications generated: 2
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -46,7 +46,16 @@
 
 ## Would-be/new notifications
 
-✅ USDC / Base — RECOVERED: util 89.7% (was 93.7%), below threshold 92.0%.
-Liquidity available: $35.5k | Borrow APY: 10.5%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
+✅ USDC / Base — RECOVERED: util 94.2% (was 100.0%), below threshold 97.0%.
+Liquidity available: $28.1k | Borrow APY: 10.4%
+Links: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base
+
+
+🚨 USDC / Base — util 93.0% (was 89.7%), kink 90.0%, threshold 92.0%
+
+Cause: Withdrawal: $100.7k withdrawn; liquidity is now $23.4k.
+Confidence: High
+
+Liquidity left: $23.4k | Borrow APY: 10.5% → 11.9%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0xf2e6d3036ea5daab74ec03326112b5e6f643bfd24bce7b59db1d9314e53b07f8
 
