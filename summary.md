@@ -1,4 +1,4 @@
-# Euler monitor — 2026-10-31T21:38:52.233Z
+# Euler monitor — 2026-11-01T01:13:52.573Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -46,11 +46,7 @@
 
 ## Would-be/new notifications
 
-🚨 USDC / Base — util 100.0% (was 85.1%), kink 90.0%, threshold 92.0%
-
-Cause: Withdrawal: $192.3k withdrawn; liquidity is now $0.
-Confidence: High
-
-Liquidity left: $0 | Borrow APY: 9.9% → 40.0%
-Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base https://basescan.org/tx/0x84e12bdac16d5e18469d8322beabfa3d35c78d253ff5fe250585a4621c83d80f
+✅ USDC / Base — RECOVERED: util 81.7% (was 100.0%), below threshold 92.0%.
+Liquidity available: $66.2k | Borrow APY: 9.5%
+Links: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base
 
