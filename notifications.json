@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "41935836806",
-  "generated_at": "2026-11-04T23:42:46.911Z",
-  "collector_completed_at": "2026-11-04T23:43:22.730Z",
+  "run_id": "41983303088",
+  "generated_at": "2026-11-05T06:52:27.585Z",
+  "collector_completed_at": "2026-11-05T06:52:50.630Z",
   "health": "degraded",
-  "notifications": [
-    {
-      "event_id": "euler-monitor_degraded-9e1582ca6bb9d519dead65c3",
-      "type": "monitor_degraded",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-11-04T23:42:46.911Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Monad\nAffected markets: 0x5795130bfb9232c7500c6e57a96fdd18bfa60436, 0x438cedce647491b1d93a73d491ec19a50194c222, 0x7ad9f09b431a4c5f4cba809d449fde842192f9ec, 0x75b6c392f778b8bcf9bdb676f8f128b4dd49ac19, 0x2067936155c7db57b1cdcf776b04b9678c245626, 0x7a81a1613d50fff334027aad76f2416368f6050f, 0xf18f3bc9440ad7940e6e2a86fd0c724add2dd0aa, 0x248c74aa002a571c340a3d894aaf294884a49be1\nFailed source: rpc\nReason: deposit-stage RPC read failed: InvalidInputRpcError"
-    }
-  ]
+  "notifications": []
 }
