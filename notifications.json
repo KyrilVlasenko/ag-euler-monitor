@@ -1,17 +1,41 @@
 {
   "schema_version": 1,
-  "run_id": "42363249920",
-  "generated_at": "2026-11-07T10:16:40.145Z",
-  "collector_completed_at": "2026-11-07T10:16:58.657Z",
+  "run_id": "42391718732",
+  "generated_at": "2026-11-07T16:31:40.959Z",
+  "collector_completed_at": "2026-11-07T16:32:07.685Z",
   "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-fde2792847bca610c257ee2a",
+      "event_id": "euler-recovery-779659c48b8536f0f70eb50b",
+      "type": "recovery",
+      "chain_id": 8453,
+      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
+      "created_at": "2026-11-07T16:31:40.959Z",
+      "message": "✅ USDC / Base — RECOVERED: util 82.0% (was 98.0%), below threshold 92.0%.\nLiquidity available: $72.7k | Borrow APY: 9.5%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+    },
+    {
+      "event_id": "euler-recovery-29b44fa157ad95d106d7cb7b",
+      "type": "recovery",
+      "chain_id": 8453,
+      "vault": "0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e",
+      "created_at": "2026-11-07T16:31:40.959Z",
+      "message": "✅ USDC / Base — RECOVERED: util 97.0% (was 99.7%), below threshold 97.0%.\nLiquidity available: $14.1k | Borrow APY: 11.7%\nLinks: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base"
+    },
+    {
+      "event_id": "euler-risk_alert-31c59beb2b99285c4115996c",
       "type": "risk_alert",
       "chain_id": 8453,
       "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
-      "created_at": "2026-11-07T10:16:40.145Z",
-      "message": "🚨 USDC / Base — util 92.4% (was 92.0%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +0.5pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $5.9k | Borrow APY: 11.1% → 11.4%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
+      "created_at": "2026-11-07T16:31:40.959Z",
+      "message": "🚨 USDC / Base — util 94.6% (was 92.4%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +2.2pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $4.2k | Borrow APY: 11.4% → 14.1%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
+    },
+    {
+      "event_id": "euler-monitor_degraded-45b514b68883b11bdba96ad9",
+      "type": "monitor_degraded",
+      "chain_id": null,
+      "vault": null,
+      "created_at": "2026-11-07T16:31:40.959Z",
+      "message": "MONITOR DEGRADED\nAffected chains: Monad, Base\nAffected markets: 0x5795130bfb9232c7500c6e57a96fdd18bfa60436, 0x2067936155c7db57b1cdcf776b04b9678c245626, 0xf18f3bc9440ad7940e6e2a86fd0c724add2dd0aa, 0x7a81a1613d50fff334027aad76f2416368f6050f, 0xf3e55a17c4c59cb70ea44973795fa8f3c3baad72, 0x7ad9f09b431a4c5f4cba809d449fde842192f9ec, 0x7cc566d100e81a9708fd23b18f6b92d3249430c9, 0x248c74aa002a571c340a3d894aaf294884a49be1\nFailed source: rpc, events\nReason: deposit-stage RPC read failed: InvalidInputRpcError; event query failed: HttpRequestError"
     }
   ]
 }
