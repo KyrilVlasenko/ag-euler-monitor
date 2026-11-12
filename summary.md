@@ -1,4 +1,4 @@
-# Euler monitor — 2026-11-12T03:03:44.036Z
+# Euler monitor — 2026-11-12T11:19:47.084Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 121490868; code endpoints []; empty endpoints []; error endpoints [2]; endpoint 2 failed the canonical chain canary read
+- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 121588152; code endpoints []; empty endpoints []; error endpoints [2]; endpoint 2 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -45,25 +45,27 @@
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
 ## Coverage issues
-- 8453 0x859160db5841e5cfb8d3f144c6b3381a85a4b410 [events] event query failed: HttpRequestError
+- 8453 0xeef57677c2fc1a930eed234e3545e750c88f6743 [events] event query failed: HttpRequestError
 
 ## Would-be/new notifications
 
-✅ USDC / Base — RECOVERED: util 73.6% (was 97.6%), below threshold 92.0%.
-Liquidity available: $26.8k | Borrow APY: 8.5%
-Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base
-
-
-🚨 WETH / Base — util 92.2% (was 88.1%), kink 90.0%, threshold 92.0%
-
-Cause: Unknown: utilization changed +4.1pp; missing vault event logs for the observation interval.
-Confidence: Low — Event logs unavailable
-
-Liquidity left: $18.3k | Borrow APY: 2.3% → 16.0%
+✅ WETH / Base — RECOVERED: util 80.2% (was 92.2%), below threshold 92.0%.
+Liquidity available: $49.9k | Borrow APY: 2.1%
 Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base
 
 
-✅ USDC / Unichain — RECOVERED: util 91.5% (was 92.1%), below threshold 92.0%.
-Liquidity available: $6.7k | Borrow APY: 10.1%
-Links: https://app.euler.finance/vault/0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba?network=unichain
+🚨 USDC / Base — util 100.0% (was 73.6%), kink 90.0%, threshold 92.0%
+
+Cause: Unknown: utilization changed +26.4pp; missing vault event logs for the observation interval.
+Confidence: Low — Event logs unavailable
+
+Liquidity left: $0 | Borrow APY: 8.5% → 120.0%
+Links: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base
+
+
+MONITOR DEGRADED
+Affected chains: Base
+Affected markets: 0xeef57677c2fc1a930eed234e3545e750c88f6743
+Failed source: events
+Reason: event query failed: HttpRequestError
 
