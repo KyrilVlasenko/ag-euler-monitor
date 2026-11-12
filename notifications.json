@@ -1,33 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "43208170312",
-  "generated_at": "2026-11-12T11:19:47.084Z",
-  "collector_completed_at": "2026-11-12T11:20:12.106Z",
-  "health": "degraded",
+  "run_id": "43295447795",
+  "generated_at": "2026-11-12T19:57:48.961Z",
+  "collector_completed_at": "2026-11-12T19:58:13.851Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-recovery-55ba39419990bf719323c3a1",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
-      "created_at": "2026-11-12T11:19:47.084Z",
-      "message": "✅ WETH / Base — RECOVERED: util 80.2% (was 92.2%), below threshold 92.0%.\nLiquidity available: $49.9k | Borrow APY: 2.1%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
-    },
-    {
-      "event_id": "euler-risk_alert-9be4261e9147fa02a2e85c6a",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0xeef57677c2fc1a930eed234e3545e750c88f6743",
-      "created_at": "2026-11-12T11:19:47.084Z",
-      "message": "🚨 USDC / Base — util 100.0% (was 73.6%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +26.4pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $0 | Borrow APY: 8.5% → 120.0%\nLinks: https://app.euler.finance/vault/0xeef57677c2fc1a930eed234e3545e750c88f6743?network=base"
-    },
-    {
-      "event_id": "euler-monitor_degraded-f437e583c4ff37716d9c5595",
-      "type": "monitor_degraded",
+      "event_id": "euler-monitor_restored-342e5c8ea55ddf1c70d63627",
+      "type": "monitor_restored",
       "chain_id": null,
       "vault": null,
-      "created_at": "2026-11-12T11:19:47.084Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Base\nAffected markets: 0xeef57677c2fc1a930eed234e3545e750c88f6743\nFailed source: events\nReason: event query failed: HttpRequestError"
+      "created_at": "2026-11-12T19:57:48.961Z",
+      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
     }
   ]
 }
