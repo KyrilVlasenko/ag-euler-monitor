@@ -1,17 +1,25 @@
 {
   "schema_version": 1,
-  "run_id": "43295447795",
-  "generated_at": "2026-11-12T19:57:48.961Z",
-  "collector_completed_at": "2026-11-12T19:58:13.851Z",
-  "health": "healthy",
+  "run_id": "43342421425",
+  "generated_at": "2026-11-13T01:07:15.554Z",
+  "collector_completed_at": "2026-11-13T01:07:42.575Z",
+  "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-monitor_restored-342e5c8ea55ddf1c70d63627",
-      "type": "monitor_restored",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-11-12T19:57:48.961Z",
-      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
+      "event_id": "euler-risk_alert-c586923470ba461b788884b3",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
+      "created_at": "2026-11-13T01:07:15.554Z",
+      "message": "🚨 USDC / Base — util 92.7% (was 91.9%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +0.8pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $21.5k | Borrow APY: 11.1% → 11.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+    },
+    {
+      "event_id": "euler-risk_alert-38f47df29b5e02d7fa2880ab",
+      "type": "risk_alert",
+      "chain_id": 130,
+      "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
+      "created_at": "2026-11-13T01:07:15.554Z",
+      "message": "🚨 USD₮0 / Unichain — util 93.7% (was 91.9%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +1.8pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $4.4k | Borrow APY: 11.4% → 17.2%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
     }
   ]
 }
