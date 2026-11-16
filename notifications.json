@@ -1,33 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "43857985352",
-  "generated_at": "2026-11-16T11:28:11.930Z",
-  "collector_completed_at": "2026-11-16T11:28:37.143Z",
-  "health": "degraded",
+  "run_id": "43967119818",
+  "generated_at": "2026-11-16T22:08:50.032Z",
+  "collector_completed_at": "2026-11-16T22:09:13.791Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-recovery-9af24347c36e51b8f3007175",
-      "type": "recovery",
-      "chain_id": 130,
-      "vault": "0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba",
-      "created_at": "2026-11-16T11:28:11.930Z",
-      "message": "✅ USDC / Unichain — RECOVERED: util 88.0% (was 92.0%), below threshold 92.0%.\nLiquidity available: $8.4k | Borrow APY: 5.4%\nLinks: https://app.euler.finance/vault/0x6eae95ee783e4d862867c4e0e4c3f4b95aa682ba?network=unichain"
-    },
-    {
-      "event_id": "euler-risk_alert-3ac3150d7a1201f5abca08da",
-      "type": "risk_alert",
-      "chain_id": 130,
-      "vault": "0xd49181c522ecdb265f0d9c175cf26fface64ead3",
-      "created_at": "2026-11-16T11:28:11.930Z",
-      "message": "🚨 USD₮0 / Unichain — util 96.3% (was 91.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +5.2pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $2.5k | Borrow APY: 8.8% → 26.0%\nLinks: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain"
-    },
-    {
-      "event_id": "euler-monitor_degraded-e641ee2fcd5b056597be12ef",
-      "type": "monitor_degraded",
+      "event_id": "euler-monitor_restored-c950a0b42538e35f8df79bc9",
+      "type": "monitor_restored",
       "chain_id": null,
       "vault": null,
-      "created_at": "2026-11-16T11:28:11.930Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Unichain\nAffected markets: 0xd49181c522ecdb265f0d9c175cf26fface64ead3\nFailed source: events\nReason: event query failed: HttpRequestError"
+      "created_at": "2026-11-16T22:08:50.032Z",
+      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
     }
   ]
 }
