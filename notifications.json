@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "44103562380",
-  "generated_at": "2026-11-17T14:29:07.393Z",
-  "collector_completed_at": "2026-11-17T14:29:29.657Z",
-  "health": "healthy",
-  "notifications": []
+  "run_id": "44194536685",
+  "generated_at": "2026-11-17T22:54:47.822Z",
+  "collector_completed_at": "2026-11-17T22:55:10.473Z",
+  "health": "degraded",
+  "notifications": [
+    {
+      "event_id": "euler-risk_alert-bc0076ee4407c1733dd2f502",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0xc64fd6138f980a5587412dac75e04363046ae32e",
+      "created_at": "2026-11-17T22:54:47.822Z",
+      "message": "🚨 WETH / Base — util 93.5% (was 90.0%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +3.5pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $4.3k | Borrow APY: 5.0% → 35.8%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
+    }
+  ]
 }
