@@ -1,4 +1,4 @@
-# Euler monitor — 2026-11-18T04:25:34.984Z
+# Euler monitor — 2026-11-18T14:03:33.449Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -6,15 +6,15 @@
 - Eligibility unresolved: 0
 - Deposit ineligible: 37
 - Deposit eligible: 21
-- Fully monitored: 21
-- Monitoring unresolved: 0
-- Total unresolved: 0
-- Coverage: healthy
+- Fully monitored: 20
+- Monitoring unresolved: 1
+- Total unresolved: 1
+- Coverage: degraded
 - Notifications generated: 1
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 130: 6/6 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
+- Chain 130: 5/6 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 1; total unresolved 1
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 8453: 10/10 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 123205680; code endpoints []; empty endpoints []; error endpoints [2]; endpoint 2 failed the canonical chain canary read
+- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 123318405; code endpoints []; empty endpoints []; error endpoints [3]; endpoint 3 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -44,9 +44,16 @@
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
+## Coverage issues
+- 130 0xd49181c522ecdb265f0d9c175cf26fface64ead3 [events] event query failed: HttpRequestError
+
 ## Would-be/new notifications
 
-✅ USD₮0 / Unichain — RECOVERED: util 91.7% (was 93.7%), below threshold 92.0%.
-Liquidity available: $5.9k | Borrow APY: 10.8%
+🚨 USD₮0 / Unichain — util 93.0% (was 91.7%), kink 90.0%, threshold 92.0%
+
+Cause: Unknown: utilization changed +1.3pp; missing vault event logs for the observation interval.
+Confidence: Low — Event logs unavailable
+
+Liquidity left: $4.9k | Borrow APY: 10.8% → 14.9%
 Links: https://app.euler.finance/vault/0xd49181c522ecdb265f0d9c175cf26fface64ead3?network=unichain
 
