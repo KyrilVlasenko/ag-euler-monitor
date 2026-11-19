@@ -1,33 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "44531705362",
-  "generated_at": "2026-11-19T13:16:00.926Z",
-  "collector_completed_at": "2026-11-19T13:16:23.229Z",
+  "run_id": "44620962412",
+  "generated_at": "2026-11-19T21:39:41.601Z",
+  "collector_completed_at": "2026-11-19T21:40:00.626Z",
   "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-recovery-f5501939d8716e3a4c0c1c40",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-11-19T13:16:00.926Z",
-      "message": "✅ USDC / Base — RECOVERED: util 83.6% (was 92.5%), below threshold 92.0%.\nLiquidity available: $53.5k | Borrow APY: 9.7%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
-    },
-    {
-      "event_id": "euler-risk_alert-cf04ce755606df8762de3220",
+      "event_id": "euler-risk_alert-bd25dd326af17d713f3839ef",
       "type": "risk_alert",
       "chain_id": 8453,
-      "vault": "0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e",
-      "created_at": "2026-11-19T13:16:00.926Z",
-      "message": "🚨 USDC / Base — util 98.3% (was 93.3%), kink 95.0%, threshold 97.0%\n\nCause: Unknown: utilization changed +5.0pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $8.0k | Borrow APY: 10.3% → 15.5%\nLinks: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base"
-    },
-    {
-      "event_id": "euler-monitor_degraded-88a342a4ba373a26710b63f8",
-      "type": "monitor_degraded",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-11-19T13:16:00.926Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Base\nAffected markets: 0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e\nFailed source: events\nReason: event query failed: HttpRequestError"
+      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
+      "created_at": "2026-11-19T21:39:41.601Z",
+      "message": "🚨 USDC / Base — util 94.4% (was 83.6%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +10.8pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $16.3k | Borrow APY: 9.7% → 13.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
     }
   ]
 }
