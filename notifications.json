@@ -1,17 +1,25 @@
 {
   "schema_version": 1,
-  "run_id": "44620962412",
-  "generated_at": "2026-11-19T21:39:41.601Z",
-  "collector_completed_at": "2026-11-19T21:40:00.626Z",
-  "health": "degraded",
+  "run_id": "44667114529",
+  "generated_at": "2026-11-20T03:21:12.632Z",
+  "collector_completed_at": "2026-11-20T03:21:35.912Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-bd25dd326af17d713f3839ef",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-1a6825b0682980fa9c3f6030",
+      "type": "recovery",
       "chain_id": 8453,
       "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-11-19T21:39:41.601Z",
-      "message": "🚨 USDC / Base — util 94.4% (was 83.6%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +10.8pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $16.3k | Borrow APY: 9.7% → 13.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+      "created_at": "2026-11-20T03:21:12.632Z",
+      "message": "✅ USDC / Base — RECOVERED: util 73.8% (was 94.4%), below threshold 92.0%.\nLiquidity available: $97.0k | Borrow APY: 8.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
+    },
+    {
+      "event_id": "euler-monitor_restored-c474015acd0faf41f58f45bb",
+      "type": "monitor_restored",
+      "chain_id": null,
+      "vault": null,
+      "created_at": "2026-11-20T03:21:12.632Z",
+      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
     }
   ]
 }
