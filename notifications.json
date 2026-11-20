@@ -1,25 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "44667114529",
-  "generated_at": "2026-11-20T03:21:12.632Z",
-  "collector_completed_at": "2026-11-20T03:21:35.912Z",
+  "run_id": "44740139941",
+  "generated_at": "2026-11-20T12:57:55.044Z",
+  "collector_completed_at": "2026-11-20T12:58:19.792Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-recovery-1a6825b0682980fa9c3f6030",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x0a1a3b5f2041f33522c4efc754a7d096f880ee16",
-      "created_at": "2026-11-20T03:21:12.632Z",
-      "message": "✅ USDC / Base — RECOVERED: util 73.8% (was 94.4%), below threshold 92.0%.\nLiquidity available: $97.0k | Borrow APY: 8.6%\nLinks: https://app.euler.finance/vault/0x0a1a3b5f2041f33522c4efc754a7d096f880ee16?network=base"
-    },
-    {
-      "event_id": "euler-monitor_restored-c474015acd0faf41f58f45bb",
-      "type": "monitor_restored",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-11-20T03:21:12.632Z",
-      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
-    }
-  ]
+  "notifications": []
 }
