@@ -1,33 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "44933032668",
-  "generated_at": "2026-11-21T17:59:54.967Z",
-  "collector_completed_at": "2026-11-21T18:00:20.355Z",
+  "run_id": "44961418858",
+  "generated_at": "2026-11-21T23:22:03.955Z",
+  "collector_completed_at": "2026-11-21T23:22:22.242Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-recovery-de0beb6454e4bd2680a6f6d5",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
-      "created_at": "2026-11-21T17:59:54.967Z",
-      "message": "✅ WETH / Base — RECOVERED: util 84.8% (was 93.0%), below threshold 92.0%.\nLiquidity available: $26.9k | Borrow APY: 2.3%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
-    },
-    {
-      "event_id": "euler-recovery-7c5d10ec947bc8e57ce20a27",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0xc64fd6138f980a5587412dac75e04363046ae32e",
-      "created_at": "2026-11-21T17:59:54.967Z",
-      "message": "✅ WETH / Base — RECOVERED: util 91.6% (was 92.6%), below threshold 92.0%.\nLiquidity available: $5.1k | Borrow APY: 18.5%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
-    },
-    {
-      "event_id": "euler-recovery-530495881620b097dfa18f53",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e",
-      "created_at": "2026-11-21T17:59:54.967Z",
-      "message": "✅ UNKNOWN / Base — RECOVERED: util 96.9% (was 98.0%), below threshold 97.0%.\nLiquidity available: $14.8k | Borrow APY: 11.5%\nLinks: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base"
-    }
-  ]
+  "notifications": []
 }
