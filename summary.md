@@ -1,4 +1,4 @@
-# Euler monitor — 2026-11-21T11:10:20.563Z
+# Euler monitor — 2026-11-21T17:59:54.967Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -6,17 +6,17 @@
 - Eligibility unresolved: 0
 - Deposit ineligible: 37
 - Deposit eligible: 21
-- Fully monitored: 19
-- Monitoring unresolved: 2
-- Total unresolved: 2
-- Coverage: degraded
-- Notifications generated: 2
+- Fully monitored: 21
+- Monitoring unresolved: 0
+- Total unresolved: 0
+- Coverage: healthy
+- Notifications generated: 3
 - Feed output: notifications.json
 
 - Chain 1: 5/5 eligible markets monitored; risk not applicable 1; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 130: 6/6 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 143: 0/0 eligible markets monitored; risk not applicable 7; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
-- Chain 8453: 8/10 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 2; total unresolved 2
+- Chain 8453: 10/10 eligible markets monitored; risk not applicable 6; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 42161: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 - Chain 59144: 0/0 eligible markets monitored; risk not applicable 0; eligibility unresolved 0; monitoring unresolved 0; total unresolved 0
 
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 124135286; code endpoints []; empty endpoints []; error endpoints [2]; endpoint 2 failed the canonical chain canary read
+- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 124216115; code endpoints []; empty endpoints []; error endpoints [3]; endpoint 3 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -44,26 +44,19 @@
 - 8453 0xd864d46c62685a6062a722afd7c8c978c410aaaf: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 - 8453 0xfab9af50f7a1cfe201cae1c15fcfddae7705ccd3: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
 
-## Coverage issues
-- 8453 0x859160db5841e5cfb8d3f144c6b3381a85a4b410 [events] event query failed: HttpRequestError
-- 8453 0xc64fd6138f980a5587412dac75e04363046ae32e [events] event query failed: HttpRequestError
-
 ## Would-be/new notifications
 
-🚨 WETH / Base — util 93.0% (was 84.9%), kink 90.0%, threshold 92.0%
-
-Cause: Unknown: utilization changed +8.2pp; missing vault event logs for the observation interval.
-Confidence: Low — Event logs unavailable
-
-Liquidity left: $12.0k | Borrow APY: 2.3% → 21.5%
+✅ WETH / Base — RECOVERED: util 84.8% (was 93.0%), below threshold 92.0%.
+Liquidity available: $26.9k | Borrow APY: 2.3%
 Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base
 
 
-🚨 WETH / Base — util 92.6% (was 90.1%), kink 90.0%, threshold 92.0%
-
-Cause: Unknown: utilization changed +2.4pp; missing vault event logs for the observation interval.
-Confidence: Low — Event logs unavailable
-
-Liquidity left: $4.3k | Borrow APY: 6.1% → 26.9%
+✅ WETH / Base — RECOVERED: util 91.6% (was 92.6%), below threshold 92.0%.
+Liquidity available: $5.1k | Borrow APY: 18.5%
 Links: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base
+
+
+✅ UNKNOWN / Base — RECOVERED: util 96.9% (was 98.0%), below threshold 97.0%.
+Liquidity available: $14.8k | Borrow APY: 11.5%
+Links: https://app.euler.finance/vault/0x4c1aeda9b43efcf1da1d1755b18802aabe90f61e?network=base
 
