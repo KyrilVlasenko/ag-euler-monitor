@@ -1,17 +1,25 @@
 {
   "schema_version": 1,
-  "run_id": "44855332971",
-  "generated_at": "2026-11-21T02:20:38.406Z",
-  "collector_completed_at": "2026-11-21T02:21:06.643Z",
-  "health": "healthy",
+  "run_id": "44897798602",
+  "generated_at": "2026-11-21T11:10:20.563Z",
+  "collector_completed_at": "2026-11-21T11:10:41.109Z",
+  "health": "degraded",
   "notifications": [
     {
-      "event_id": "euler-recovery-cd5f843b620b8380fb7473ad",
-      "type": "recovery",
+      "event_id": "euler-risk_alert-0ecc478549460b15c99191c3",
+      "type": "risk_alert",
+      "chain_id": 8453,
+      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
+      "created_at": "2026-11-21T11:10:20.563Z",
+      "message": "🚨 WETH / Base — util 93.0% (was 84.9%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +8.2pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $12.0k | Borrow APY: 2.3% → 21.5%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
+    },
+    {
+      "event_id": "euler-risk_alert-b9ced034d6d2eaafb4ad25ef",
+      "type": "risk_alert",
       "chain_id": 8453,
       "vault": "0xc64fd6138f980a5587412dac75e04363046ae32e",
-      "created_at": "2026-11-21T02:20:38.406Z",
-      "message": "✅ WETH / Base — RECOVERED: util 90.1% (was 92.9%), below threshold 92.0%.\nLiquidity available: $5.9k | Borrow APY: 6.1%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
+      "created_at": "2026-11-21T11:10:20.563Z",
+      "message": "🚨 WETH / Base — util 92.6% (was 90.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +2.4pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $4.3k | Borrow APY: 6.1% → 26.9%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
     }
   ]
 }
