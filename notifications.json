@@ -1,33 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "45037886797",
-  "generated_at": "2026-11-22T15:22:01.990Z",
-  "collector_completed_at": "2026-11-22T15:22:22.958Z",
-  "health": "degraded",
+  "run_id": "45074239740",
+  "generated_at": "2026-11-22T21:49:38.470Z",
+  "collector_completed_at": "2026-11-22T21:49:57.398Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-f58f8b9e1bff6ae5ad5e4cec",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
-      "created_at": "2026-11-22T15:22:01.990Z",
-      "message": "🚨 WETH / Base — util 96.4% (was 82.0%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +14.4pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $6.4k | Borrow APY: 2.2% → 47.0%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
-    },
-    {
-      "event_id": "euler-risk_alert-1b2c1dab1b7ddb42b4715444",
-      "type": "risk_alert",
-      "chain_id": 8453,
-      "vault": "0xc64fd6138f980a5587412dac75e04363046ae32e",
-      "created_at": "2026-11-22T15:22:01.990Z",
-      "message": "🚨 WETH / Base — util 92.2% (was 91.1%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +1.0pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $4.8k | Borrow APY: 14.3% → 23.3%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
-    },
-    {
-      "event_id": "euler-monitor_degraded-2266ceb775db6202e9b37fba",
-      "type": "monitor_degraded",
+      "event_id": "euler-monitor_restored-77737215171a35ecf122d638",
+      "type": "monitor_restored",
       "chain_id": null,
       "vault": null,
-      "created_at": "2026-11-22T15:22:01.990Z",
-      "message": "MONITOR DEGRADED\nAffected chains: Base\nAffected markets: 0x859160db5841e5cfb8d3f144c6b3381a85a4b410, 0xc64fd6138f980a5587412dac75e04363046ae32e\nFailed source: events\nReason: event query failed: HttpRequestError"
+      "created_at": "2026-11-22T21:49:38.470Z",
+      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
     }
   ]
 }
