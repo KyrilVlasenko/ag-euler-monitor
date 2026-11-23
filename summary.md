@@ -1,4 +1,4 @@
-# Euler monitor — 2026-11-23T02:49:31.578Z
+# Euler monitor — 2026-11-23T12:53:42.238Z
 - Mode: production
 - Inventory rows: 104
 - Lifecycle excluded: 32
@@ -26,7 +26,7 @@
 - Chain 143: endpoints 3/4 healthy, 1 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 1; unsupported contracts 0
 - Chain 8453: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
 - Chain 59144: endpoints 3/3 healthy, 0 quarantined; confirmed no-code 0; RPC disagreements 0; RPC unavailable events 0; unsupported contracts 0
-- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 124604473; code endpoints []; empty endpoints []; error endpoints [3]; endpoint 3 failed the canonical chain canary read
+- Chain 143 0xba4dd672062de8feedb665dd4410658864483f1e: rpc-unavailable; phase canary; fallback resolved true; block 124723857; code endpoints []; empty endpoints []; error endpoints [3]; endpoint 3 failed the canonical chain canary read
 
 ## Risk not applicable (live canonical configuration)
 - 1 0xbd858dcee56df1f0cba44e6f5a469fbfec0246cd: canonical EVault has no IRM, no debt, and no configured collateral LTVs; IRM 0x0000000000000000000000000000000000000000; borrows 0; collateral LTVs 0
@@ -46,7 +46,7 @@
 
 ## Would-be/new notifications
 
-✅ WETH / Base — RECOVERED: util 91.2% (was 93.6%), below threshold 92.0%.
-Liquidity available: $16.6k | Borrow APY: 9.6%
-Links: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base
+✅ WETH / Base — RECOVERED: util 91.9% (was 92.2%), below threshold 92.0%.
+Liquidity available: $5.0k | Borrow APY: 20.8%
+Links: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base
 
