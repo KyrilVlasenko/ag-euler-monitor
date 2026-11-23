@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "45074239740",
-  "generated_at": "2026-11-22T21:49:38.470Z",
-  "collector_completed_at": "2026-11-22T21:49:57.398Z",
+  "run_id": "45102365496",
+  "generated_at": "2026-11-23T02:49:31.578Z",
+  "collector_completed_at": "2026-11-23T02:49:49.580Z",
   "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-monitor_restored-77737215171a35ecf122d638",
-      "type": "monitor_restored",
-      "chain_id": null,
-      "vault": null,
-      "created_at": "2026-11-22T21:49:38.470Z",
-      "message": "MONITOR RESTORED\nFull required Euler market coverage is available again."
+      "event_id": "euler-recovery-0ea86cae9ea3cc939422170a",
+      "type": "recovery",
+      "chain_id": 8453,
+      "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
+      "created_at": "2026-11-23T02:49:31.578Z",
+      "message": "✅ WETH / Base — RECOVERED: util 91.2% (was 93.6%), below threshold 92.0%.\nLiquidity available: $16.6k | Borrow APY: 9.6%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
     }
   ]
 }
