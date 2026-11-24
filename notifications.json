@@ -1,17 +1,8 @@
 {
   "schema_version": 1,
-  "run_id": "45178535673",
-  "generated_at": "2026-11-23T12:53:42.238Z",
-  "collector_completed_at": "2026-11-23T12:54:05.888Z",
+  "run_id": "45301077709",
+  "generated_at": "2026-11-24T00:55:49.456Z",
+  "collector_completed_at": "2026-11-24T00:56:14.349Z",
   "health": "healthy",
-  "notifications": [
-    {
-      "event_id": "euler-recovery-9d23ae164be2d9ad3bc3286f",
-      "type": "recovery",
-      "chain_id": 8453,
-      "vault": "0xc64fd6138f980a5587412dac75e04363046ae32e",
-      "created_at": "2026-11-23T12:53:42.238Z",
-      "message": "✅ WETH / Base — RECOVERED: util 91.9% (was 92.2%), below threshold 92.0%.\nLiquidity available: $5.0k | Borrow APY: 20.8%\nLinks: https://app.euler.finance/vault/0xc64fd6138f980a5587412dac75e04363046ae32e?network=base"
-    }
-  ]
+  "notifications": []
 }
