@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "run_id": "45379806265",
-  "generated_at": "2026-11-24T10:58:44.621Z",
-  "collector_completed_at": "2026-11-24T10:59:14.364Z",
-  "health": "degraded",
+  "run_id": "45489170308",
+  "generated_at": "2026-11-24T21:15:19.619Z",
+  "collector_completed_at": "2026-11-24T21:15:45.954Z",
+  "health": "healthy",
   "notifications": [
     {
-      "event_id": "euler-risk_alert-67dbbd296a86b88e3aab95e8",
-      "type": "risk_alert",
+      "event_id": "euler-recovery-55e0d1ac5a091d7a44f16277",
+      "type": "recovery",
       "chain_id": 8453,
       "vault": "0x859160db5841e5cfb8d3f144c6b3381a85a4b410",
-      "created_at": "2026-11-24T10:58:44.621Z",
-      "message": "🚨 WETH / Base — util 93.9% (was 86.3%), kink 90.0%, threshold 92.0%\n\nCause: Unknown: utilization changed +7.5pp; missing vault event logs for the observation interval.\nConfidence: Low — Event logs unavailable\n\nLiquidity left: $10.9k | Borrow APY: 2.3% → 27.5%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
+      "created_at": "2026-11-24T21:15:19.619Z",
+      "message": "✅ WETH / Base — RECOVERED: util 88.4% (was 93.9%), below threshold 92.0%.\nLiquidity available: $22.1k | Borrow APY: 2.4%\nLinks: https://app.euler.finance/vault/0x859160db5841e5cfb8d3f144c6b3381a85a4b410?network=base"
     }
   ]
 }
